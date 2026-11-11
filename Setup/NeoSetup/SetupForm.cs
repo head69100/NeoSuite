@@ -125,13 +125,15 @@ public sealed class SetupForm : Form
             _ => "Vos applications Neo, réunies dans un seul panneau",
         };
 
-        var apps = package?.Apps() ?? [];
+        // Les applis ne sont plus dans l'installateur (téléchargées depuis NeoSuite) : on liste celles de la suite
+        var apps = package?.Apps() is { Count: > 0 } packaged ? packaged.Select(a => a.Name).ToList()
+            : Installer.NeoApps.Where(a => a != "NeoSuite").ToList();
         var intro = Paragraph(mode switch
         {
             Mode.Update => "Une nouvelle version de NeoSuite est prête à être installée. Vos applications, vos réglages et vos raccourcis sont conservés.",
             Mode.Reinstall => "Cette version est déjà à jour. Vous pouvez la réinstaller pour réparer une installation abîmée.",
             Mode.Older => "Cet installateur contient une version plus ancienne que celle de ce PC. L'installer ferait revenir NeoSuite en arrière.",
-            _ => "NeoSuite s'installe dans un panneau à droite de l'écran (Ctrl + Alt + N). Depuis ce panneau, vous installez ensuite les applications dont vous avez besoin :",
+            _ => "NeoSuite s'installe dans un panneau à droite de l'écran (Ctrl + Alt + N). Depuis ce panneau, vous installez ensuite en un clic les applications dont vous avez besoin, téléchargées dans leur dernière version :",
         });
         var list = new Label
         {
@@ -140,7 +142,7 @@ public sealed class SetupForm : Form
             Dock = DockStyle.Top,
             ForeColor = Color.White,
             Font = new Font("Segoe UI Semibold", 10f),
-            Text = apps.Count == 0 ? "" : string.Join("  ·  ", apps.Select(a => a.Name)),
+            Text = string.Join("  ·  ", apps),
             Padding = new Padding(0, 4, 0, 0),
         };
 
@@ -171,7 +173,7 @@ public sealed class SetupForm : Form
         AcceptButton = _primary;
 
         if (package is null)
-            AddToBody(Paragraph($"Les fichiers à installer sont introuvables : « {Path.GetFileName(InstallerPackage.DataPathFor(Environment.ProcessPath!))} » doit rester dans le même dossier que ce programme.", Danger));
+            AddToBody(Paragraph("Cet installateur est incomplet (téléchargement interrompu ?). Téléchargez à nouveau NeoSuite.exe depuis github.com/head69100/NeoSuite.", Danger));
     }
 
     private enum Mode

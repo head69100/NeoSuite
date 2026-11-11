@@ -3,7 +3,8 @@ using Neo.Shared;
 namespace NeoSetup;
 
 /// <summary>
-/// NeoSuite.exe : installe NeoSuite et le catalogue des applis (les fichiers sont dans NeoSuite.pak, à côté).
+/// NeoSuite.exe : installe NeoSuite (ses fichiers sont collés à la fin du programme, voir InstallerPackage).
+/// Les applis se téléchargent ensuite depuis NeoSuite.
 /// Copié sans ses données en Program Files\Neo\NeoSuite-Uninstall.exe, il sert de désinstallateur.
 /// </summary>
 public static class Program

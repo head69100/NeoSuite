@@ -514,13 +514,14 @@
   /* =========================================================
      Téléchargements : dernière version publiée sur GitHub
      ========================================================= */
-  var RELEASE_URL = "https://github.com/head69100/NeoSuite/releases/latest";
+  // Lien stable de GitHub vers le fichier de la dernière release : le téléchargement démarre directement
+  var INSTALLER_URL = "https://github.com/head69100/NeoSuite/releases/latest/download/NeoSuite.exe";
 
   function download() {
-    window.open(RELEASE_URL, "_blank", "noopener");
+    window.location.href = INSTALLER_URL;
     toast(
-      "Téléchargement sur GitHub",
-      "Prenez NeoSuite.exe et NeoSuite.pak, gardez-les dans le même dossier, puis lancez NeoSuite.exe.",
+      "Téléchargement de NeoSuite.exe",
+      "Un seul fichier : lancez-le, puis installez vos applications depuis le panneau (Ctrl + Alt + N).",
       "i-download"
     );
   }
@@ -593,7 +594,7 @@
       { label: "Nos promesses", hint: "Trois engagements", icon: "i-shield", action: function () { goTo("#promesses"); } },
       { label: "Installation", hint: "Trois étapes", icon: "i-download", action: function () { goTo("#installation"); } },
       { label: "Questions fréquentes", hint: "FAQ", icon: "i-spark", action: function () { goTo("#faq"); } },
-      { label: "Nouveautés 0.5.0", hint: "Journal des versions", icon: "i-arrow-up", action: function () { openRelease(); } },
+      { label: "Nouveautés 0.6.0", hint: "Journal des versions", icon: "i-arrow-up", action: function () { openRelease(); } },
       {
         label: "Télécharger NeoSuite",
         hint: "824 Mo · Windows",

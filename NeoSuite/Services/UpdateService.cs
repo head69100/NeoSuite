@@ -20,7 +20,7 @@ public sealed record SuiteUpdate(Version Version, string? InstallerPath, string 
 
 /// <summary>
 /// Cherche une mise à jour de NeoSuite :
-/// 1. sur cet ordinateur : un installateur NeoSuite*.exe (avec son NeoSuite.pak) plus récent dans Téléchargements,
+/// 1. sur cet ordinateur : un installateur NeoSuite*.exe plus récent dans Téléchargements,
 ///    sur le Bureau, dans Documents, ou dans le dossier <c>dist</c> du développeur (rien à télécharger) ;
 /// 2. en ligne : la dernière release GitHub (<see cref="GitHubReleases"/>), téléchargée au moment d'installer.
 /// </summary>
@@ -54,8 +54,8 @@ public static class UpdateService
     private static async Task<SuiteUpdate?> FindOnlineUpdateAsync(bool force)
     {
         var release = await GitHubReleases.GetLatestAsync(force);
-        if (release is null || release.Version <= CurrentVersion
-            || release.Asset(InstallerName) is null || release.Asset(PayloadName) is null)
+        // Depuis 0.6.0 l'installateur est un seul .exe ; les releases plus anciennes y joignaient NeoSuite.pak
+        if (release is null || release.Version <= CurrentVersion || release.Asset(InstallerName) is null)
             return null;
         return new SuiteUpdate(release.Version, null, "GitHub", release.Notes, release);
     }
@@ -71,14 +71,15 @@ public static class UpdateService
         var release = update.Release!;
         var folder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "NeoSuite", "Updates", update.Version.ToString(3));
         var exe = release.Asset(InstallerName)!;
-        var pak = release.Asset(PayloadName)!;
-        var total = (double)(exe.Size + pak.Size);
+        var pak = release.Asset(PayloadName);
+        var total = (double)Math.Max(1, exe.Size + (pak?.Size ?? 0));
 
-        // Progression globale : l'installateur (petit) puis ses données (gros)
+        // Progression globale : l'installateur, puis ses données s'il en a à part (anciennes releases)
         await GitHubReleases.DownloadAsync(exe, Path.Combine(folder, InstallerName),
             new Progress<double>(p => progress?.Report(p * exe.Size / total)), cancel);
-        await GitHubReleases.DownloadAsync(pak, Path.Combine(folder, PayloadName),
-            new Progress<double>(p => progress?.Report((exe.Size + p * pak.Size) / total)), cancel);
+        if (pak is not null)
+            await GitHubReleases.DownloadAsync(pak, Path.Combine(folder, PayloadName),
+                new Progress<double>(p => progress?.Report((exe.Size + p * pak.Size) / total)), cancel);
 
         var ready = update with { InstallerPath = Path.Combine(folder, InstallerName), FolderLabel = "GitHub" };
         Available = ready;

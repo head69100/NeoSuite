@@ -1,8 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <!--
-    Installateur de NeoSuite. Publi� en un seul ex�cutable autonome (tools\build-setup.ps1), accompagn� de ses
-    fichiers � installer (NeoSuite + paquets des applis) dans NeoSuite.pak : voir InstallerPackage.cs.
+    Installateur de NeoSuite. Publié en un seul exécutable autonome (tools\build-setup.ps1), auquel sont collés
+    les fichiers de NeoSuite : voir InstallerPackage.cs. Les applis se téléchargent ensuite depuis NeoSuite.
   -->
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
@@ -22,13 +22,13 @@
     <PublishSingleFile>true</PublishSingleFile>
     <IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
     <EnableCompressionInSingleFile>true</EnableCompressionInSingleFile>
-    <Version>0.5.1</Version>
+    <Version>0.6.0</Version>
     <Product>NeoSuite</Product>
     <Company>Neo</Company>
   </PropertyGroup>
 
   <ItemGroup>
-    <!-- Lecture du paquet d'installation, partag�e avec NeoSuite (qui cherche les mises � jour) -->
+    <!-- Lecture du paquet d'installation, partagée avec NeoSuite (qui cherche les mises à jour) -->
     <Compile Include="..\..\Shared\Neo.Shared\InstallerPackage.cs" Link="InstallerPackage.cs" />
     <EmbeddedResource Include="Assets\Logo.png" LogicalName="Logo.png" />
   </ItemGroup>

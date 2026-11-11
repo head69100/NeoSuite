@@ -42,14 +42,11 @@ Chaque application est indépendante : NeoSuite peut en installer une seule, et 
 
 ## Installer
 
-1. Ouvrez la [dernière version](https://github.com/head69100/NeoSuite/releases/latest).
-2. Téléchargez **`NeoSuite.exe`** et **`NeoSuite.pak`**, dans le **même dossier**.
-3. Lancez `NeoSuite.exe` et acceptez la confirmation de Windows.
-4. Ouvrez le panneau avec <kbd>Ctrl</kbd> + <kbd>Alt</kbd> + <kbd>N</kbd>.
+1. Téléchargez **[`NeoSuite.exe`](https://github.com/head69100/NeoSuite/releases/latest/download/NeoSuite.exe)** : un seul fichier.
+2. Lancez-le et acceptez la confirmation de Windows.
+3. Ouvrez le panneau avec <kbd>Ctrl</kbd> + <kbd>Alt</kbd> + <kbd>N</kbd> et cliquez sur les applications voulues : NeoSuite les télécharge depuis la dernière release de ce dépôt, puis les installe.
 
-> **Pourquoi deux fichiers ?** Windows analyse en entier un `.exe` inconnu à son premier lancement : avec 800 Mo dans l'exécutable, l'attente dépasse plusieurs minutes. Les données sont donc à part, dans `NeoSuite.pak`, que Windows n'analyse pas au lancement.
-
-Les applications s'installent dans `C:\Program Files\Neo\<App>`, avec une entrée dans « Applications installées » de Windows.
+L'installateur ne contient que NeoSuite : il reste léger, et chaque appli arrive directement dans sa dernière version. Les applications s'installent dans `C:\Program Files\Neo\<App>`, avec une entrée dans « Applications installées » de Windows.
 
 ## Mises à jour automatiques
 
@@ -72,8 +69,8 @@ Une **release GitHub** porte le tag `vX.Y.Z` de **NeoSuite** et contient tout :
 
 | Fichier | Rôle |
 |---|---|
-| `NeoSuite.exe` + `NeoSuite.pak` | l'installateur complet, pour un nouvel utilisateur |
-| `<App>.zip` | le paquet de chaque application, pour les mises à jour appli par appli |
+| `NeoSuite.exe` | l'installateur (un seul fichier), qui installe NeoSuite |
+| `<App>.zip` | le paquet de chaque application, téléchargé par NeoSuite / NeoSoft pour l'installer ou la mettre à jour |
 | `catalog.json` | la version, la taille et l'empreinte SHA-256 de chaque paquet |
 
 Les nouveautés de chaque appli sont dans son `CHANGELOG.md` : [NeoSuite](NeoSuite/CHANGELOG.md) · [NeoDriver](NeoDriver/CHANGELOG.md) · [NeoUninstaller](NeoUninstaller/CHANGELOG.md) · [NeoBoost](NeoBoost/CHANGELOG.md) · [NeoSoft](NeoSoft/CHANGELOG.md) · [NeoRar](NeoRar/CHANGELOG.md) · [NeoMedia](NeoMedia/CHANGELOG.md) · [NeoSound](NeoSound/CHANGELOG.md) · [NeoTorrent](NeoTorrent/CHANGELOG.md) · [Installateur](Setup/CHANGELOG.md).
@@ -89,7 +86,7 @@ dotnet build NeoSuite\NeoSuite.csproj -c Debug -p:Platform=x64
 # Paquet d'une appli (packages\<App>.zip + catalog.json)
 powershell -ExecutionPolicy Bypass -File tools\build-packages.ps1 -Apps NeoDriver
 
-# Installateur complet (dist\NeoSuite.exe + dist\NeoSuite.pak)
+# Installateur (un seul fichier : dist\NeoSuite.exe)
 powershell -ExecutionPolicy Bypass -File tools\build-setup.ps1
 
 # Publier la version sur GitHub (tag, notes, fichiers, version du site)

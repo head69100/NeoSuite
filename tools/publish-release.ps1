@@ -2,8 +2,9 @@
     Publie une version de NeoSuite sur GitHub (dépôt head69100/NeoSuite).
 
     Une release « vX.Y.Z » (X.Y.Z = version de NeoSuite) contient :
-        NeoSuite.exe + NeoSuite.pak   l'installateur complet (dist\), pour un nouvel utilisateur
-        <App>.zip + catalog.json      le paquet de chaque appli (packages\), pour les mises à jour appli par appli
+        NeoSuite.exe                  l'installateur, un seul fichier (dist\) : il installe NeoSuite seul
+        <App>.zip + catalog.json      le paquet de chaque appli (packages\), téléchargé par NeoSuite / NeoSoft
+                                      quand l'utilisateur installe ou met à jour une appli
     NeoSuite interroge la dernière release (NeoSuite\Services\GitHubReleases.cs) : nouvelle version de la suite
     proposée dans son panneau, paquets plus récents proposés sur les tuiles des applis.
 
@@ -11,7 +12,7 @@
         1. Vérifie que dist\ et packages\ correspondent bien à la version du code (sinon : build-setup.ps1)
         2. Met à jour la version et la taille affichées sur le site (NeoSite), puis commit + push
         3. Crée le tag et la release, notes tirées du premier bloc de NeoSuite\CHANGELOG.md
-        4. Envoie les fichiers (environ 1,6 Go : compter plusieurs minutes)
+        4. Envoie les fichiers (plusieurs centaines de Mo : compter quelques minutes)
 
     Utilisation :  powershell -ExecutionPolicy Bypass -File tools\publish-release.ps1 [-Draft]
     Prérequis    :  gh (connecté : gh auth status) et git, dépôt déjà poussé sur GitHub.
@@ -30,29 +31,35 @@ Set-Location $root
 $version = ([xml](Get-Content (Join-Path $root 'NeoSuite\NeoSuite.csproj') -Raw -Encoding UTF8)).Project.PropertyGroup.Version | Where-Object { $_ } | Select-Object -First 1
 $tag = "v$version"
 $exe = Join-Path $root 'dist\NeoSuite.exe'
-$pak = Join-Path $root 'dist\NeoSuite.pak'
 $catalog = Join-Path $root 'packages\catalog.json'
-foreach ($f in $exe, $pak, $catalog) {
+foreach ($f in $exe, $catalog) {
     if (-not (Test-Path $f)) { throw "Fichier manquant : $f (lancez d'abord tools\build-setup.ps1)" }
 }
 
-# L'installateur doit contenir CETTE version de NeoSuite (info.json dans le .pak)
-Add-Type -AssemblyName System.IO.Compression.FileSystem
-$zip = [System.IO.Compression.ZipFile]::OpenRead($pak)
+# L'installateur doit contenir CETTE version de NeoSuite : info.json, dans l'archive collée à la fin de l'exe
+# (16 derniers octets : position de l'archive puis « NEOSETUP », voir Shared\Neo.Shared\InstallerPackage.cs)
+Add-Type -AssemblyName System.IO.Compression, System.IO.Compression.FileSystem
+$bytes = [System.IO.File]::ReadAllBytes($exe)
+if ([System.Text.Encoding]::ASCII.GetString($bytes, $bytes.Length - 8, 8) -ne 'NEOSETUP') {
+    throw "dist\NeoSuite.exe n'a pas de fichiers à installer : relancez tools\build-setup.ps1 -SkipPackages"
+}
+$offset = [BitConverter]::ToInt64($bytes, $bytes.Length - 16)
+$stream = New-Object System.IO.MemoryStream($bytes, [int]$offset, [int]($bytes.Length - 16 - $offset))
+$zip = New-Object System.IO.Compression.ZipArchive($stream, [System.IO.Compression.ZipArchiveMode]::Read)
 try {
     $reader = New-Object System.IO.StreamReader($zip.GetEntry('info.json').Open())
     $info = $reader.ReadToEnd() | ConvertFrom-Json
     $reader.Dispose()
 }
-finally { $zip.Dispose() }
+finally { $zip.Dispose(); $bytes = $null }
 if ($info.suiteVersion -ne $version) {
-    throw "dist\NeoSuite.pak contient NeoSuite $($info.suiteVersion), le code est en $version : relancez tools\build-setup.ps1 -SkipPackages"
+    throw "dist\NeoSuite.exe contient NeoSuite $($info.suiteVersion), le code est en $version : relancez tools\build-setup.ps1 -SkipPackages"
 }
 
 $apps = (Get-Content $catalog -Raw -Encoding UTF8 | ConvertFrom-Json).PSObject.Properties
-$assets = @($exe, $pak, $catalog) + ($apps | ForEach-Object { Join-Path $root "packages\$($_.Name).zip" })
+$assets = @($exe, $catalog) + ($apps | ForEach-Object { Join-Path $root "packages\$($_.Name).zip" })
 foreach ($a in $assets) { if (-not (Test-Path $a)) { throw "Paquet manquant : $a" } }
-$totalMb = [math]::Round(((Get-Item $exe).Length + (Get-Item $pak).Length) / 1MB)
+$totalMb = [math]::Round((Get-Item $exe).Length / 1MB)
 
 $existing = gh release view $tag --repo $repo --json tagName 2>$null
 if ($LASTEXITCODE -eq 0 -and $existing) { throw "La release $tag existe déjà sur GitHub. Montez la version de NeoSuite (CLAUDE.md) avant de republier." }
@@ -67,7 +74,9 @@ if ($html -match '"softwareVersion":\s*"([^"]+)"' -and $Matches[1] -ne $version)
     foreach ($file in $site, $siteJs) {
         $text = [System.IO.File]::ReadAllText($file, [System.Text.Encoding]::UTF8)
         # Taille : seulement la fiche « Taille » et la commande « Télécharger » (le reste du site a d'autres « Mo »)
-        $text = $text.Replace($old, $version) `
+        # Les entrées de la fenêtre « Nouveautés » (release-ver) gardent leur numéro : c'est l'historique
+        $keep = "<span class=`"release-ver`">$old "
+        $text = $text.Replace($keep, '@@NEO-KEEP@@').Replace($old, $version).Replace('@@NEO-KEEP@@', $keep) `
             -replace '(<span>Taille</span><b>)\d+ Mo', "`${1}$totalMb Mo" `
             -replace 'hint: "\d+ Mo · Windows"', "hint: `"$totalMb Mo · Windows`""
         [System.IO.File]::WriteAllText($file, $text, $utf8)
@@ -93,11 +102,11 @@ $notes = @"
 $(($lines -join "`n").Trim())
 
 ### Installer NeoSuite
-1. Téléchargez **NeoSuite.exe** et **NeoSuite.pak** ci-dessous, dans le **même dossier** ($totalMb Mo au total).
-2. Lancez **NeoSuite.exe** et acceptez la confirmation de Windows.
-3. Ouvrez le panneau avec **Ctrl + Alt + N**.
+1. Téléchargez **NeoSuite.exe** ci-dessous ($totalMb Mo) : c'est le seul fichier nécessaire.
+2. Lancez-le et acceptez la confirmation de Windows.
+3. Ouvrez le panneau avec **Ctrl + Alt + N**, puis cliquez sur les applications à installer : elles se téléchargent depuis cette page, dans leur dernière version.
 
-Déjà installé ? NeoSuite propose cette version tout seul, en haut de son panneau.
+Déjà installé ? NeoSuite propose cette version tout seul, en haut de son panneau. Les autres fichiers ci-dessous (`.zip`, `catalog.json`) sont les applications, utilisées automatiquement par NeoSuite et NeoSoft.
 
 ### Versions des applications
 | Appli | Version |

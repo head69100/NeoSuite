@@ -116,7 +116,8 @@ public class NeoApp : INotifyPropertyChanged
         _ when IsInstalled && StoredStatus is not null => StoredStatus,
         _ when IsInstalled => "Ouvrir",
         _ when CanInstall => PackageSize > 0 ? $"Installer · {PackageSize / 1024.0 / 1024.0:0} Mo" : "Installer",
-        _ => "Bientôt",
+        // Paquet introuvable : ni sur ce PC, ni sur GitHub (pas de connexion, ou recherche en cours)
+        _ => "Indisponible",
     };
 
     /// <summary>À appeler après une (dés)installation pour rafraîchir la tuile.</summary>

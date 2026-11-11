@@ -6,8 +6,8 @@ tout (polices, images, scripts) est servi localement et le site fonctionne hors 
 
 > **En ligne :** <https://head69100.github.io/NeoSuite/>, publié automatiquement par
 > GitHub Pages (`.github/workflows/pages.yml`) à chaque modification de ce dossier.
-> Les boutons « Télécharger » ouvrent la dernière release GitHub
-> (`NeoSuite.exe` + `NeoSuite.pak`). La version et la taille affichées sont mises à
+> Les boutons « Télécharger » téléchargent directement `NeoSuite.exe` (un seul fichier)
+> depuis la dernière release GitHub. La version et la taille affichées sont mises à
 > jour par `tools\publish-release.ps1`.
 
 ---
@@ -78,7 +78,7 @@ NeoSite/
 | Saisir `neo` dans la palette | Filtre les applications par nom |
 | `Entrée` dans la palette | Ouvre l’app sélectionnée |
 | `↑` `↓` `↑` `↓` `←` `→` `←` `→` `B` `A` | Active le mode **Overdrive** (thème magenta/violet) |
-| Boutons « Télécharger » | Ouvre la dernière release GitHub et explique quoi télécharger |
+| Boutons « Télécharger » | Télécharge `NeoSuite.exe` depuis la dernière release GitHub |
 | Bouton « Nouveautés » | Ouvre le dialogue des notes de version |
 | Console NeoBoost | Interrupteurs, suspension de processus, boost réversible |
 | `?noboot` dans l’URL | Ignore le préchargeur (utile pour les captures) |
@@ -95,8 +95,8 @@ Les notes de version et les libellés de téléchargement se trouvent dans
 
 ## Limites
 
-- **Téléchargements** : les liens `data-download` ouvrent la page de la dernière
-  release GitHub ; l’installateur n’est pas servi par le site lui-même.
+- **Téléchargements** : les liens `data-download` téléchargent `NeoSuite.exe` de la
+  dernière release GitHub ; l’installateur n’est pas servi par le site lui-même.
 - **Pas de back-end** : formulaire, compte, newsletter et statistiques sont absents.
 - **Aucune requête réseau** : pas de CDN, pas de police distante, pas d’analytics.
 - **Changelog** : les liens pointent vers `NeoSuite/CHANGELOG.md` sur GitHub.

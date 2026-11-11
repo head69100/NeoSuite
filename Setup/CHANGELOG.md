@@ -1,9 +1,12 @@
 ﻿# Installateur NeoSuite — Nouveautés
 
-## 0.5.1 — 2026-11-11
+## 0.6.0 — 2026-11-11
+
+### Nouveautés
+- Un seul fichier, NeoSuite.exe, bien plus léger : il installe NeoSuite 0.6.0, qui télécharge ensuite les applications à la demande.
 
 ### Améliorations
-- Contient NeoSuite 0.5.1 et NeoSoft 0.3.2.
+- Une mise à jour retire les anciens paquets d'applis copiés sur le PC (plusieurs centaines de Mo) : les versions en ligne les remplacent.
 
 ## 0.5.0 — 2026-11-11
 

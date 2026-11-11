@@ -1,20 +1,20 @@
 ﻿<#
-    Construit l'installateur de NeoSuite pour un nouvel utilisateur, dans dist\ :
-        NeoSuite.exe   le programme d'installation (petit)
-        NeoSuite.pak   ses fichiers : NeoSuite, paquets des applis, info.json (version et nouveautés)
-    Les deux fichiers vont ensemble (même dossier). Pourquoi deux : Windows analyse en entier un .exe inconnu
-    à son premier lancement, et 700 Mo, c'est de 20 secondes à plusieurs minutes d'attente. Un fichier de
-    données de la même taille, lui, n'est pas analysé au lancement.
+    Construit l'installateur de NeoSuite, en UN seul fichier : dist\NeoSuite.exe.
 
-    1. Reconstruit les paquets des applis (packages\*.zip, sauf avec -SkipPackages)
+    Il ne contient que NeoSuite (le panneau) : les applis (NeoDriver, NeoSoft…) ne sont pas dedans. NeoSuite les
+    télécharge depuis la dernière release GitHub au moment où l'utilisateur clique sur « Installer »
+    (catalog.json + <App>.zip, voir NeoSuite\Services\AppCatalog.cs). L'installateur reste ainsi léger, et Windows,
+    qui analyse en entier un .exe inconnu à son premier lancement, l'ouvre vite.
+
+    1. Reconstruit les paquets des applis (packages\*.zip, pour la release ; sauf avec -SkipPackages)
     2. Publie NeoSuite (Release, autonome)
-    3. Rassemble NeoSuite\, Packages\ et info.json dans une archive ZIP
-    4. Publie l'installateur (Setup\NeoSetup) en un seul .exe
-    5. Pose NeoSuite.exe et NeoSuite.pak dans dist\ (avec -SingleFile : un seul .exe, données collées dedans)
+    3. Rassemble NeoSuite\ et info.json (version et nouveautés) dans une archive ZIP
+    4. Publie le programme d'installation (Setup\NeoSetup)
+    5. Colle l'archive à la fin du programme : dist\NeoSuite.exe (voir Shared\Neo.Shared\InstallerPackage.cs)
 
-    Utilisation :  powershell -ExecutionPolicy Bypass -File tools\build-setup.ps1 [-SkipPackages] [-SingleFile]
+    Utilisation :  powershell -ExecutionPolicy Bypass -File tools\build-setup.ps1 [-SkipPackages]
 #>
-param([switch]$SkipPackages, [switch]$SingleFile)
+param([switch]$SkipPackages)
 
 $ErrorActionPreference = 'Stop'
 Add-Type -AssemblyName System.IO.Compression, System.IO.Compression.FileSystem
@@ -25,12 +25,9 @@ $dist = Join-Path $root 'dist'
 if (Test-Path $work) { Remove-Item $work -Recurse -Force }
 New-Item -ItemType Directory -Force $work, $dist | Out-Null
 
-# 1. Paquets des applis
+# 1. Paquets des applis (publiés à part dans la release, pas dans l'installateur)
 if (-not $SkipPackages) {
     foreach ($app in $apps) { & (Join-Path $PSScriptRoot 'build-packages.ps1') -Apps $app }
-}
-foreach ($app in $apps) {
-    if (-not (Test-Path (Join-Path $root "packages\$app.zip"))) { throw "Paquet manquant : packages\$app.zip (relancez sans -SkipPackages)" }
 }
 
 # 2. NeoSuite
@@ -52,9 +49,9 @@ $info = [ordered]@{ suiteVersion = $suiteVersion; built = (Get-Date).ToString('s
 [System.IO.File]::WriteAllText($infoPath, $info, (New-Object System.Text.UTF8Encoding $false))
 Write-Host "NeoSuite $suiteVersion ($($notes.Count) nouveautés)" -ForegroundColor Cyan
 
-# 3. Archive : NeoSuite compressé, paquets stockés tels quels (déjà compressés)
+# 3. Archive : NeoSuite + info.json
 Write-Host 'Assemblage des fichiers à installer...' -ForegroundColor Cyan
-$payload = Join-Path $work 'NeoSuite.pak'
+$payload = Join-Path $work 'payload.zip'
 $zip = [System.IO.Compression.ZipFile]::Open($payload, 'Create')
 try {
     Get-ChildItem $suiteOut -Recurse -File | ForEach-Object {
@@ -62,43 +59,29 @@ try {
         [void][System.IO.Compression.ZipFileExtensions]::CreateEntryFromFile($zip, $_.FullName, $name, 'Optimal')
     }
     [void][System.IO.Compression.ZipFileExtensions]::CreateEntryFromFile($zip, $infoPath, 'info.json', 'Optimal')
-    $catalog = Join-Path $root 'packages\catalog.json'
-    [void][System.IO.Compression.ZipFileExtensions]::CreateEntryFromFile($zip, $catalog, 'Packages/catalog.json', 'Optimal')
-    foreach ($app in $apps) {
-        [void][System.IO.Compression.ZipFileExtensions]::CreateEntryFromFile($zip, (Join-Path $root "packages\$app.zip"), "Packages/$app.zip", 'NoCompression')
-    }
 }
 finally { $zip.Dispose() }
 
-# 4. Installateur
+# 4. Programme d'installation
 Write-Host "Publication de l'installateur..." -ForegroundColor Cyan
 $setupOut = Join-Path $work 'setup'
 dotnet publish (Join-Path $root 'Setup\NeoSetup\NeoSetup.csproj') -c Release -o $setupOut -nologo -v q
 if ($LASTEXITCODE -ne 0) { throw "Échec de la publication de l'installateur" }
 $stub = Join-Path $setupOut 'NeoSuite.exe'
 
-# 5. dist\ : on repart de zéro (anciens noms compris : NeoSuite-Setup.exe)
+# 5. dist\NeoSuite.exe = programme + archive + 16 octets (position de l'archive, puis « NEOSETUP »).
+#    Les anciens fichiers (NeoSuite.pak, NeoSuite-Setup.exe) sont retirés.
 Get-ChildItem $dist -File -ErrorAction SilentlyContinue | Where-Object { $_.Name -like 'NeoSuite*.exe' -or $_.Name -like 'NeoSuite*.pak' } | Remove-Item -Force
 $target = Join-Path $dist 'NeoSuite.exe'
-if ($SingleFile) {
-    $out = [System.IO.File]::Create($target)
-    try {
-        $stubBytes = [System.IO.File]::ReadAllBytes($stub)
-        $out.Write($stubBytes, 0, $stubBytes.Length)
-        $offset = [long]$stubBytes.Length
-        $in = [System.IO.File]::OpenRead($payload)
-        try { $in.CopyTo($out) } finally { $in.Dispose() }
-        $trailer = [BitConverter]::GetBytes($offset) + [System.Text.Encoding]::ASCII.GetBytes('NEOSETUP')
-        $out.Write($trailer, 0, $trailer.Length)
-    }
-    finally { $out.Dispose() }
-    Write-Host ("Installateur prêt : {0} ({1:N0} Mo, fichier unique : lent au premier lancement)" -f $target, ((Get-Item $target).Length / 1MB)) -ForegroundColor Green
+$out = [System.IO.File]::Create($target)
+try {
+    $stubBytes = [System.IO.File]::ReadAllBytes($stub)
+    $out.Write($stubBytes, 0, $stubBytes.Length)
+    $offset = [long]$stubBytes.Length
+    $in = [System.IO.File]::OpenRead($payload)
+    try { $in.CopyTo($out) } finally { $in.Dispose() }
+    $trailer = [BitConverter]::GetBytes($offset) + [System.Text.Encoding]::ASCII.GetBytes('NEOSETUP')
+    $out.Write($trailer, 0, $trailer.Length)
 }
-else {
-    Copy-Item $stub $target
-    Copy-Item $payload (Join-Path $dist 'NeoSuite.pak')
-    Write-Host ("Installateur prêt dans {0}" -f $dist) -ForegroundColor Green
-    Write-Host ("  NeoSuite.exe  {0:N0} Mo`n  NeoSuite.pak  {1:N0} Mo   (à garder dans le même dossier)" -f ((Get-Item $target).Length / 1MB), ((Get-Item (Join-Path $dist 'NeoSuite.pak')).Length / 1MB))
-}
-
-# NeoTorrent ajouté au catalogue
+finally { $out.Dispose() }
+Write-Host ("Installateur prêt : {0} ({1:N0} Mo, fichier unique)" -f $target, ((Get-Item $target).Length / 1MB)) -ForegroundColor Green

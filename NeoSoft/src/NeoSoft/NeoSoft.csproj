@@ -13,11 +13,11 @@
     <UseWinUI>true</UseWinUI>
     <WindowsPackageType>None</WindowsPackageType>
     <WindowsAppSDKSelfContained>true</WindowsAppSDKSelfContained>
-    <!-- N�cessaire pour que dotnet publish copie NeoSoft.pri (ressources XAML) en mode non empaquet� -->
+    <!-- Nécessaire pour que dotnet publish copie NeoSoft.pri (ressources XAML) en mode non empaqueté -->
     <EnableMsixTooling>true</EnableMsixTooling>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-    <Version>0.3.2</Version>
+    <Version>0.4.0</Version>
     <Product>NeoSoft</Product>
   </PropertyGroup>
 

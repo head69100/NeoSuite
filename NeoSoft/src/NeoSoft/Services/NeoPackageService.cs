@@ -11,7 +11,8 @@ public sealed record NeoPackageState(string? InstalledVersion, string? Available
 
 /// <summary>
 /// Applis de la suite Neo proposées dans NeoSoft (NeoRar…). Elles ne sont pas dans winget : leurs paquets sont
-/// ceux de NeoSuite (packages\catalog.json), installés dans Program Files\Neo par NeoSuite en mode « worker ».
+/// ceux de NeoSuite (dernière release GitHub, ou catalogue local), installés dans Program Files\Neo par NeoSuite
+/// en mode « worker ».
 /// </summary>
 public static class NeoPackageService
 {
@@ -43,24 +44,50 @@ public static class NeoPackageService
     {
         if (NeoSuiteInfo.SuiteExe is not { } suite)
             return new(false, "NeoSuite est introuvable : ouvrez NeoSuite une fois, puis réessayez.");
-        if (LoadCatalog().GetValueOrDefault(id) is not { } package || !File.Exists(package.Zip))
-            return new(false, "Le paquet d'installation n'est pas disponible.");
+        if (await Task.Run(() => LoadCatalog().GetValueOrDefault(id), cancel) is not { } package
+            || (!IsUrl(package.Zip) && !File.Exists(package.Zip)))
+            return new(false, "Le paquet d'installation n'est pas disponible (connexion à Internet nécessaire).");
 
-        // Copie locale vérifiée : le paquet installé est exactement celui du catalogue
-        progress.Report(("Vérification du paquet…", -1));
+        // Copie locale vérifiée (téléchargée depuis GitHub, ou copiée du PC) : le paquet installé est exactement
+        // celui du catalogue
         var temp = Path.Combine(Path.GetTempPath(), "NeoSoft", $"{id}.zip");
         Directory.CreateDirectory(Path.GetDirectoryName(temp)!);
         try
         {
-            await using (var source = File.OpenRead(package.Zip))
-            await using (var target = File.Create(temp))
+            if (IsUrl(package.Zip))
+            {
+                progress.Report(("Téléchargement…", 0));
+                using var response = await Http.Value.GetAsync(package.Zip, HttpCompletionOption.ResponseHeadersRead, cancel);
+                response.EnsureSuccessStatusCode();
+                var total = response.Content.Headers.ContentLength ?? 0;
+                await using var source = await response.Content.ReadAsStreamAsync(cancel);
+                await using var target = File.Create(temp);
+                var buffer = new byte[1 << 20];
+                long copied = 0;
+                int read;
+                while ((read = await source.ReadAsync(buffer, cancel)) > 0)
+                {
+                    await target.WriteAsync(buffer.AsMemory(0, read), cancel);
+                    copied += read;
+                    if (total > 0)
+                        progress.Report(($"Téléchargement… {copied * 100 / total} %", copied * 100.0 / total));
+                }
+            }
+            else
+            {
+                progress.Report(("Vérification du paquet…", -1));
+                await using var source = File.OpenRead(package.Zip);
+                await using var target = File.Create(temp);
                 await source.CopyToAsync(target, cancel);
+            }
+
             if (package.Sha256 is { } expected)
             {
+                progress.Report(("Vérification du paquet…", -1));
                 await using var stream = File.OpenRead(temp);
                 var hash = Convert.ToHexString(await SHA256.HashDataAsync(stream, cancel));
                 if (!hash.Equals(expected, StringComparison.OrdinalIgnoreCase))
-                    return new(false, "Le paquet est corrompu (empreinte SHA-256 différente).");
+                    return new(false, "Le paquet téléchargé est corrompu ou vient d'être remplacé (empreinte SHA-256 différente) : réessayez.");
             }
 
             progress.Report(("Installation…", -1));
@@ -106,30 +133,89 @@ public static class NeoPackageService
             : new(false, result?.StartsWith("ERR:") == true ? result[4..] : "l'opération a échoué.");
     }
 
+    /// <summary>
+    /// Paquets disponibles : ceux du PC (catalogue local de NeoSuite, s'il en a un) complétés par ceux de la
+    /// dernière release GitHub, retenus quand ils sont plus récents.
+    /// </summary>
     private static Dictionary<string, Package> LoadCatalog()
     {
         var result = new Dictionary<string, Package>(StringComparer.OrdinalIgnoreCase);
-        if (NeoSuiteInfo.PackagesCatalog is not { } catalogPath)
-            return result;
-        try
+        if (NeoSuiteInfo.PackagesCatalog is { } catalogPath)
         {
-            var folder = Path.GetDirectoryName(catalogPath)!;
-            using var doc = JsonDocument.Parse(File.ReadAllText(catalogPath));
-            foreach (var entry in doc.RootElement.EnumerateObject())
+            try
             {
-                var e = entry.Value;
-                result[entry.Name] = new Package(
-                    Path.Combine(folder, $"{entry.Name}.zip"),
-                    e.TryGetProperty("version", out var v) ? v.GetString() : null,
-                    e.TryGetProperty("sha256", out var s) ? s.GetString() : null);
+                var folder = Path.GetDirectoryName(catalogPath)!;
+                foreach (var (name, version, sha) in ParseCatalog(File.ReadAllText(catalogPath)))
+                    result[name] = new Package(Path.Combine(folder, $"{name}.zip"), version, sha);
+            }
+            catch (Exception)
+            {
+                // Catalogue local illisible : on s'en tient à celui en ligne
             }
         }
-        catch (Exception)
+
+        foreach (var (name, package) in LoadOnlineCatalog())
         {
-            // Catalogue illisible : aucune appli Neo proposée
+            if (!result.TryGetValue(name, out var local) || IsNewer(package.Version, local.Version ?? "0.0"))
+                result[name] = package;
         }
         return result;
     }
+
+    private static IEnumerable<(string Name, string? Version, string? Sha256)> ParseCatalog(string json)
+    {
+        // catalog.json est écrit avec une marque d'encodage (BOM)
+        using var doc = JsonDocument.Parse(json.TrimStart('﻿'));
+        return doc.RootElement.EnumerateObject()
+            .Select(e => (e.Name,
+                e.Value.TryGetProperty("version", out var v) ? v.GetString() : null,
+                e.Value.TryGetProperty("sha256", out var s) ? s.GetString() : null))
+            .ToList();
+    }
+
+    // ---- Catalogue en ligne : dernière release du dépôt public head69100/NeoSuite ----
+
+    private const string LatestRelease = "https://github.com/head69100/NeoSuite/releases/latest/download/";
+    private static readonly Lazy<HttpClient> Http = new(() =>
+    {
+        var http = new HttpClient { Timeout = TimeSpan.FromMinutes(30) };
+        http.DefaultRequestHeaders.UserAgent.ParseAdd("NeoSoft");
+        return http;
+    });
+    private static readonly object OnlineLock = new();
+    private static Dictionary<string, Package> _online = [];
+    private static DateTime _onlineAt;
+
+    /// <summary>
+    /// catalog.json de la dernière release (relu au plus toutes les 10 minutes ; vide sans connexion).
+    /// Appelé hors du thread de l'interface. Si une release sort entre la lecture du catalogue et le téléchargement,
+    /// l'empreinte SHA-256 ne correspond plus et l'installation demande de réessayer.
+    /// </summary>
+    private static Dictionary<string, Package> LoadOnlineCatalog()
+    {
+        lock (OnlineLock)
+        {
+            if (DateTime.Now - _onlineAt < TimeSpan.FromMinutes(10))
+                return _online;
+            _onlineAt = DateTime.Now;
+            try
+            {
+                using var cancel = new CancellationTokenSource(TimeSpan.FromSeconds(15));
+                using var response = Http.Value.GetAsync(LatestRelease + "catalog.json", cancel.Token).GetAwaiter().GetResult();
+                response.EnsureSuccessStatusCode();
+                var json = response.Content.ReadAsStringAsync(cancel.Token).GetAwaiter().GetResult();
+                _online = ParseCatalog(json).ToDictionary(p => p.Name, p => new Package(LatestRelease + $"{p.Name}.zip", p.Version, p.Sha256), StringComparer.OrdinalIgnoreCase);
+            }
+            catch (Exception)
+            {
+                // Pas de connexion ou release illisible : on réessaiera dans une minute
+                _onlineAt = DateTime.Now - TimeSpan.FromMinutes(9);
+            }
+            return _online;
+        }
+    }
+
+    private static bool IsUrl(string source) => source.StartsWith("http://", StringComparison.OrdinalIgnoreCase) || source.StartsWith("https://", StringComparison.OrdinalIgnoreCase);
 
     private static bool IsNewer(string? available, string installed) =>
         Version.TryParse(available, out var a) && Version.TryParse(installed, out var i) && a > i;

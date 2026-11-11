@@ -69,7 +69,9 @@ public static class AppInstaller
         HttpClient? http = null;
         if (Uri.TryCreate(source, UriKind.Absolute, out var uri) && uri.Scheme is "http" or "https")
         {
-            http = new HttpClient();
+            // Paquet de la release GitHub (plusieurs dizaines de Mo) : délai large, et un nom de client comme le veut GitHub
+            http = new HttpClient { Timeout = TimeSpan.FromMinutes(30) };
+            http.DefaultRequestHeaders.UserAgent.ParseAdd($"NeoSuite/{UpdateService.CurrentVersion.ToString(3)}");
             var response = await http.GetAsync(uri, HttpCompletionOption.ResponseHeadersRead);
             response.EnsureSuccessStatusCode();
             total = response.Content.Headers.ContentLength ?? 0;

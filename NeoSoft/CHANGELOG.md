@@ -1,6 +1,9 @@
 # NeoSoft — Nouveautés
 
-## 0.3.2 — 2026-11-11
+## 0.4.0 — 2026-11-11
+
+### Nouveautés
+- Les applis Neo (NeoRar, NeoMedia, NeoTorrent…) se téléchargent depuis Internet, dans leur dernière version, même si NeoSuite n'en a aucune copie sur le PC.
 
 ### Corrections
 - La carte NeoTorrent du catalogue affiche maintenant son logo.

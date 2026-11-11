@@ -15,7 +15,7 @@ public sealed record ReleaseInfo(Version Version, string Tag, string PageUrl, IR
 
 /// <summary>
 /// Mises à jour en ligne : la dernière release du dépôt GitHub de NeoSuite.
-/// Une release « vX.Y.Z » (X.Y.Z = version de NeoSuite) contient l'installateur (NeoSuite.exe + NeoSuite.pak),
+/// Une release « vX.Y.Z » (X.Y.Z = version de NeoSuite) contient l'installateur (NeoSuite.exe, un seul fichier),
 /// le paquet de chaque appli (&lt;App&gt;.zip) et leur catalogue (catalog.json) : voir tools\publish-release.ps1.
 /// Dépôt public : aucune clé ni identifiant n'est nécessaire.
 /// </summary>

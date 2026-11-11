@@ -1,9 +1,14 @@
 ﻿# NeoSuite - Nouveautés
 
-## 0.5.1 - 2026-11-11
+## 0.6.0 - 2026-11-11
+
+### Nouveautés
+- Un seul fichier à télécharger : NeoSuite.exe installe NeoSuite, plus besoin de NeoSuite.pak à côté.
+- Les applications se téléchargent depuis Internet au moment où vous cliquez sur « Installer », directement dans leur dernière version.
 
 ### Améliorations
-- NeoSoft passe en 0.3.2 : le logo de NeoTorrent s'affiche dans son catalogue.
+- NeoSoft passe en 0.4.0 : il propose lui aussi les applis Neo en ligne, et le logo de NeoTorrent s'affiche dans son catalogue.
+- Une appli qu'aucune connexion ne permet de télécharger affiche « Indisponible » au lieu de « Bientôt ».
 
 ### Corrections
 - La liste des applis publiée sur GitHub est lue de façon plus fiable : les tuiles proposent bien les nouvelles versions des applis.

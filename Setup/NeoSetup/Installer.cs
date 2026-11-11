@@ -10,8 +10,9 @@ public sealed record InstallOptions(bool StartWithWindows, bool DesktopShortcut)
 public sealed record UninstallOptions(bool RemoveApps, bool RemoveSettings);
 
 /// <summary>
-/// Installe NeoSuite dans Program Files\Neo\NeoSuite et les paquets des applis dans Program Files\Neo\Packages :
-/// NeoSuite (et NeoSoft) y trouvent ensuite de quoi installer chaque appli à la demande.
+/// Installe NeoSuite dans Program Files\Neo\NeoSuite. Les applis ne sont pas dans l'installateur : NeoSuite (et
+/// NeoSoft) les téléchargent depuis la dernière release GitHub quand l'utilisateur les installe.
+/// Un ancien installateur pouvait apporter leurs paquets (Packages/) : ils sont encore acceptés.
 /// </summary>
 public static class Installer
 {
@@ -64,6 +65,7 @@ public static class Installer
         DeleteDirectory(packagesStaging);
 
         var entries = payload.Archive.Entries.Where(e => e.Name.Length > 0).ToList();
+        var hasPackages = entries.Any(e => e.FullName.StartsWith("Packages/"));
         var total = Math.Max(1, entries.Sum(e => e.Length));
         long done = 0;
         foreach (var entry in entries)
@@ -86,8 +88,11 @@ public static class Installer
         progress.Report(("Finalisation…", 92));
         DeleteDirectory(SuiteDir);
         Directory.Move(staging, SuiteDir);
+        // Sans paquets dans l'installateur, ceux d'une ancienne version (plusieurs centaines de Mo) sont retirés :
+        // NeoSuite propose les versions en ligne, plus récentes
         DeleteDirectory(PackagesDir);
-        Directory.Move(packagesStaging, PackagesDir);
+        if (hasPackages)
+            Directory.Move(packagesStaging, PackagesDir);
 
         // Désinstallateur : ce même programme, sans les fichiers à installer
         using (var self = File.OpenRead(Environment.ProcessPath!))
@@ -123,7 +128,10 @@ public static class Installer
         using (var neo = Registry.CurrentUser.CreateSubKey(@"Software\Neo"))
         {
             neo.SetValue("SuiteExe", SuiteExe);
-            neo.SetValue("PackagesCatalog", Path.Combine(PackagesDir, "catalog.json"));
+            if (hasPackages)
+                neo.SetValue("PackagesCatalog", Path.Combine(PackagesDir, "catalog.json"));
+            else
+                neo.DeleteValue("PackagesCatalog", throwOnMissingValue: false);
         }
 
         RegisterUninstallEntry();
