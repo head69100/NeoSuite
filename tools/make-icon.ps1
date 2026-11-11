@@ -69,9 +69,11 @@ New-Item -ItemType Directory -Force $assets | Out-Null
 $big = New-RoundedIcon 512
 $big.Save((Join-Path $assets 'AppIcon.png'), [System.Drawing.Imaging.ImageFormat]::Png)
 $big.Save((Join-Path $root "NeoSuite\Assets\Apps\$App.png"), [System.Drawing.Imaging.ImageFormat]::Png)
-# Applis proposées dans le catalogue de NeoSoft (ex. NeoRar)
+# Applis proposées dans le catalogue de NeoSoft (ex. NeoRar) : l'icône est créée si l'appli y figure,
+# même la première fois (avant, seule une icône déjà présente était mise à jour : NeoTorrent n'en avait pas)
 $neoSoftIcon = Join-Path $root "NeoSoft\src\NeoSoft\Assets\Apps\$App.png"
-if (Test-Path $neoSoftIcon) { $big.Save($neoSoftIcon, [System.Drawing.Imaging.ImageFormat]::Png) }
+$neoSoftCatalog = [System.IO.File]::ReadAllText((Join-Path $root 'NeoSoft\src\NeoSoft\Services\SoftwareCatalog.cs'), [System.Text.Encoding]::UTF8)
+if ((Test-Path $neoSoftIcon) -or $neoSoftCatalog.Contains("Id = `"$App`"")) { $big.Save($neoSoftIcon, [System.Drawing.Imaging.ImageFormat]::Png) }
 $big.Dispose()
 
 # ---- .ico multi-tailles (images PNG intégrées, format accepté depuis Windows Vista) ----

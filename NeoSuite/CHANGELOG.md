@@ -1,5 +1,13 @@
 ﻿# NeoSuite - Nouveautés
 
+## 0.5.1 - 2026-11-11
+
+### Améliorations
+- NeoSoft passe en 0.3.2 : le logo de NeoTorrent s'affiche dans son catalogue.
+
+### Corrections
+- La liste des applis publiée sur GitHub est lue de façon plus fiable : les tuiles proposent bien les nouvelles versions des applis.
+
 ## 0.5.0 - 2026-11-11
 
 ### Nouveautés

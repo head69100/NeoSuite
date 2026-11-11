@@ -1,5 +1,10 @@
 # NeoSoft — Nouveautés
 
+## 0.3.2 — 2026-11-11
+
+### Corrections
+- La carte NeoTorrent du catalogue affiche maintenant son logo.
+
 ## 0.3.1 — 2026-10-18
 
 ### Corrections

@@ -22,7 +22,7 @@
     <PublishSingleFile>true</PublishSingleFile>
     <IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
     <EnableCompressionInSingleFile>true</EnableCompressionInSingleFile>
-    <Version>0.5.0</Version>
+    <Version>0.5.1</Version>
     <Product>NeoSuite</Product>
     <Company>Neo</Company>
   </PropertyGroup>

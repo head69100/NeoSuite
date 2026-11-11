@@ -17,7 +17,7 @@
     <EnableMsixTooling>true</EnableMsixTooling>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-    <Version>0.3.1</Version>
+    <Version>0.3.2</Version>
     <Product>NeoSoft</Product>
   </PropertyGroup>
 

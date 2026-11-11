@@ -1,5 +1,10 @@
 ﻿# Installateur NeoSuite — Nouveautés
 
+## 0.5.1 — 2026-11-11
+
+### Améliorations
+- Contient NeoSuite 0.5.1 et NeoSoft 0.3.2.
+
 ## 0.5.0 — 2026-11-11
 
 ### Nouveautés

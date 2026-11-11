@@ -197,7 +197,8 @@ public static class AppCatalog
 
         try
         {
-            using var doc = JsonDocument.Parse(json);
+            // catalog.json est écrit avec une marque d'encodage (BOM) par build-packages.ps1
+            using var doc = JsonDocument.Parse(json.TrimStart('﻿'));
             foreach (var app in apps.Where(a => !a.IsBusy))
             {
                 if (!doc.RootElement.TryGetProperty(app.Id, out var entry) || release.Asset($"{app.Id}.zip") is not { } zip)
