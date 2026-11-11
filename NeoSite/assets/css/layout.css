@@ -1611,6 +1611,48 @@ body.is-ready .hero-title .line:nth-child(2) > span { animation-delay: 0.12s; }
   text-transform: uppercase;
 }
 
+/* Soutien (GitHub Sponsors), discret sous l'appel final */
+.final-sponsor {
+  margin-top: 18px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 10px 14px;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.final-sponsor a {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border: 1px solid rgba(255, 92, 138, 0.35);
+  border-radius: 999px;
+  color: #ff8fb0;
+  text-decoration: none;
+  transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+
+.final-sponsor a:hover,
+.final-sponsor a:focus-visible {
+  background: rgba(255, 92, 138, 0.12);
+  border-color: rgba(255, 92, 138, 0.7);
+  color: #ffc2d4;
+}
+
+.final-sponsor .ico {
+  width: 16px;
+  height: 16px;
+  fill: currentColor;
+  stroke: none;
+}
+
+.footer-col a.footer-sponsor {
+  color: #ff8fb0;
+}
+
 /* =========================================================
    Pied de page
    ========================================================= */

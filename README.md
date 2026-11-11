@@ -19,7 +19,8 @@
 <p align="center">
   <a href="https://github.com/head69100/NeoSuite/releases/latest"><b>⬇ Télécharger NeoSuite</b></a> ·
   <a href="https://head69100.github.io/NeoSuite/">Site de présentation</a> ·
-  <a href="NeoSuite/CHANGELOG.md">Nouveautés</a>
+  <a href="NeoSuite/CHANGELOG.md">Nouveautés</a> ·
+  <a href="https://github.com/sponsors/head69100">❤️ Soutenir</a>
 </p>
 
 ---
@@ -74,6 +75,13 @@ Une **release GitHub** porte le tag `vX.Y.Z` de **NeoSuite** et contient tout :
 | `catalog.json` | la version, la taille et l'empreinte SHA-256 de chaque paquet |
 
 Les nouveautés de chaque appli sont dans son `CHANGELOG.md` : [NeoSuite](NeoSuite/CHANGELOG.md) · [NeoDriver](NeoDriver/CHANGELOG.md) · [NeoUninstaller](NeoUninstaller/CHANGELOG.md) · [NeoBoost](NeoBoost/CHANGELOG.md) · [NeoSoft](NeoSoft/CHANGELOG.md) · [NeoRar](NeoRar/CHANGELOG.md) · [NeoMedia](NeoMedia/CHANGELOG.md) · [NeoSound](NeoSound/CHANGELOG.md) · [NeoTorrent](NeoTorrent/CHANGELOG.md) · [Installateur](Setup/CHANGELOG.md).
+
+## ❤️ Soutenir NeoSuite
+
+NeoSuite est gratuit, sans publicité et le restera. Si vous voulez qu'il continue d'être amélioré et tenu à jour,
+vous pouvez me soutenir avec le bouton **Sponsor** en haut de cette page, ou sur [GitHub Sponsors](https://github.com/sponsors/head69100). Merci !
+
+Ça vous aide ? Cliquez sur ⭐ **Star** et 👁 **Watch** en haut de la page : ça fait connaître NeoSuite et vous êtes prévenu à chaque nouvelle version.
 
 ## Compiler depuis les sources
 

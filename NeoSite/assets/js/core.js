@@ -597,10 +597,18 @@
       { label: "Nouveautés 0.6.0", hint: "Journal des versions", icon: "i-arrow-up", action: function () { openRelease(); } },
       {
         label: "Télécharger NeoSuite",
-        hint: "824 Mo · Windows",
+        hint: "142 Mo · Windows",
         icon: "i-download",
         action: function () {
           download();
+        }
+      },
+      {
+        label: "Soutenir NeoSuite",
+        hint: "GitHub Sponsors",
+        icon: "i-heart",
+        action: function () {
+          window.open("https://github.com/sponsors/head69100", "_blank", "noopener");
         }
       }
     ];
