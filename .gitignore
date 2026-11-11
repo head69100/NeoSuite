@@ -1,0 +1,19 @@
+# Compilation .NET / Visual Studio
+bin/
+obj/
+.vs/
+*.user
+*.suo
+*.binlog
+
+# Produits de build : publiés dans les releases GitHub, pas dans le dépôt
+# (tools\build-packages.ps1, tools\build-setup.ps1, tools\publish-release.ps1)
+dist/
+packages/
+*.part
+
+# Divers
+node_modules/
+Thumbs.db
+desktop.ini
+.DS_Store

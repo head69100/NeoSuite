@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Page
+    x:Class="NeoBoost.Views.DashboardPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <ScrollViewer>
+        <StackPanel Padding="36,24,36,36" Spacing="16">
+            <StackPanel>
+                <TextBlock Text="Accueil" Style="{StaticResource TitleTextBlockStyle}" />
+                <TextBlock x:Name="CpuNameText" Style="{StaticResource SecondaryTextStyle}" />
+            </StackPanel>
+
+            <!-- Mode Boost -->
+            <Border Style="{StaticResource CardStyle}">
+                <Grid ColumnSpacing="20">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <Border Width="52" Height="52" CornerRadius="26" Background="{ThemeResource AccentFillColorDefaultBrush}" VerticalAlignment="Top">
+                        <FontIcon Glyph="&#xE945;" FontSize="24" Foreground="{ThemeResource TextOnAccentFillColorPrimaryBrush}" />
+                    </Border>
+                    <StackPanel Grid.Column="1" Spacing="4">
+                        <TextBlock x:Name="BoostTitle" Text="Mode Boost" Style="{StaticResource SubtitleTextBlockStyle}" />
+                        <TextBlock x:Name="BoostText" TextWrapping="Wrap" Style="{StaticResource SecondaryTextStyle}"
+                                   Text="Passe Windows en performances maximales le temps d'un jeu ou d'un travail lourd. Le PC consomme et chauffe un peu plus : désactivez-le ensuite pour revenir au mode habituel." />
+                        <TextBlock x:Name="BatteryWarning" Visibility="Collapsed" TextWrapping="Wrap" Margin="0,4,0,0"
+                                   Foreground="{ThemeResource SystemFillColorCautionBrush}"
+                                   Text="Le PC est sur batterie : le mode Boost videra la batterie plus vite." />
+                    </StackPanel>
+                    <Button x:Name="BoostButton" Grid.Column="2" VerticalAlignment="Center" MinWidth="180" Padding="16,8"
+                            Style="{StaticResource AccentButtonStyle}" Content="Activer le mode Boost" Click="BoostButton_Click" />
+                </Grid>
+            </Border>
+            <InfoBar x:Name="BoostError" Severity="Error" IsOpen="False" />
+
+            <!-- État du PC -->
+            <Grid ColumnSpacing="12">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <Border Style="{StaticResource CardStyle}" Padding="16">
+                    <StackPanel Spacing="6">
+                        <StackPanel Orientation="Horizontal" Spacing="8">
+                            <FontIcon Glyph="&#xE9D9;" FontSize="14" />
+                            <TextBlock Text="Processeur" Style="{StaticResource BodyStrongTextBlockStyle}" />
+                        </StackPanel>
+                        <TextBlock x:Name="CpuText" Text="…" Style="{StaticResource SubtitleTextBlockStyle}" />
+                        <ProgressBar x:Name="CpuBar" Maximum="100" />
+                    </StackPanel>
+                </Border>
+
+                <Border Grid.Column="1" Style="{StaticResource CardStyle}" Padding="16">
+                    <StackPanel Spacing="6">
+                        <StackPanel Orientation="Horizontal" Spacing="8">
+                            <FontIcon Glyph="&#xE964;" FontSize="14" />
+                            <TextBlock Text="Mémoire" Style="{StaticResource BodyStrongTextBlockStyle}" />
+                        </StackPanel>
+                        <TextBlock x:Name="RamText" Text="…" Style="{StaticResource SubtitleTextBlockStyle}" />
+                        <ProgressBar x:Name="RamBar" Maximum="100" />
+                        <TextBlock x:Name="RamDetail" Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                    </StackPanel>
+                </Border>
+
+                <Border Grid.Column="2" Style="{StaticResource CardStyle}" Padding="16">
+                    <StackPanel Spacing="6">
+                        <StackPanel Orientation="Horizontal" Spacing="8">
+                            <FontIcon Glyph="&#xEDA2;" FontSize="14" />
+                            <TextBlock x:Name="DiskTitle" Text="Disque système" Style="{StaticResource BodyStrongTextBlockStyle}" />
+                        </StackPanel>
+                        <TextBlock x:Name="DiskText" Text="…" Style="{StaticResource SubtitleTextBlockStyle}" />
+                        <ProgressBar x:Name="DiskBar" Maximum="100" />
+                        <TextBlock x:Name="DiskDetail" Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                    </StackPanel>
+                </Border>
+
+                <Border Grid.Column="3" Style="{StaticResource CardStyle}" Padding="16">
+                    <StackPanel Spacing="6">
+                        <StackPanel Orientation="Horizontal" Spacing="8">
+                            <FontIcon Glyph="&#xE823;" FontSize="14" />
+                            <TextBlock Text="Allumé depuis" Style="{StaticResource BodyStrongTextBlockStyle}" />
+                        </StackPanel>
+                        <TextBlock x:Name="UptimeText" Text="…" Style="{StaticResource SubtitleTextBlockStyle}" />
+                        <TextBlock x:Name="PowerText" Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="Wrap" />
+                    </StackPanel>
+                </Border>
+            </Grid>
+
+            <!-- Conseils -->
+            <TextBlock Text="Diagnostic" Style="{StaticResource BodyStrongTextBlockStyle}" Margin="0,8,0,0" />
+            <StackPanel x:Name="AdvicePanel" Spacing="8" />
+
+            <!-- Liens vers NeoUninstaller -->
+            <TextBlock Text="Aller plus loin" Style="{StaticResource BodyStrongTextBlockStyle}" Margin="0,8,0,0" />
+            <Border Style="{StaticResource CardStyle}" Padding="16">
+                <Grid ColumnSpacing="16">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <FontIcon Glyph="&#xE7E8;" VerticalAlignment="Top" Margin="0,2,0,0" />
+                    <StackPanel Grid.Column="1">
+                        <TextBlock Text="Programmes au démarrage et fichiers inutiles" />
+                        <TextBlock TextWrapping="Wrap" Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                   Text="Ce qui accélère le plus le démarrage de Windows : désactiver les programmes qui se lancent avec lui. C'est le rôle de NeoUninstaller, avec le nettoyage des fichiers temporaires." />
+                    </StackPanel>
+                    <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
+                        <Button Content="Démarrage" Click="OpenStartup_Click" />
+                        <Button Content="Nettoyage" Click="OpenCleaner_Click" />
+                    </StackPanel>
+                </Grid>
+            </Border>
+            <InfoBar x:Name="UninstallerMissing" Severity="Informational" IsOpen="False"
+                     Message="NeoUninstaller n'est pas installé : installez-le depuis NeoSuite." />
+        </StackPanel>
+    </ScrollViewer>
+</Page>

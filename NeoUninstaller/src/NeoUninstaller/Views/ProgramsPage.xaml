@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Page
+    x:Class="NeoUninstaller.Views.ProgramsPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:models="using:NeoUninstaller.Models">
+
+    <Grid Padding="36,24,36,0" RowSpacing="14">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <!-- Barre de la désinstallation multiple -->
+        <Border x:Name="BatchBar" Grid.Row="4" Visibility="Collapsed" Margin="0,0,0,16" Padding="16,10" CornerRadius="8"
+                Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1">
+            <Grid ColumnSpacing="12">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <TextBlock x:Name="BatchText" VerticalAlignment="Center" Style="{StaticResource BodyStrongTextBlockStyle}" />
+                <CheckBox x:Name="QuietCheck" Grid.Column="1" Content="Silencieuse si possible" VerticalAlignment="Center"
+                          ToolTipService.ToolTip="Utilise la désinstallation sans fenêtres quand le programme la propose" />
+                <Button x:Name="BatchButton" Grid.Column="2" Style="{StaticResource AccentButtonStyle}" Click="BatchButton_Click" IsEnabled="False"
+                        AutomationProperties.Name="Désinstaller la sélection">
+                    <StackPanel Orientation="Horizontal" Spacing="8">
+                        <FontIcon Glyph="&#xE74D;" FontSize="14" />
+                        <TextBlock Text="Désinstaller la sélection" />
+                    </StackPanel>
+                </Button>
+            </Grid>
+        </Border>
+
+        <StackPanel>
+            <TextBlock Text="Programmes installés" Style="{StaticResource TitleTextBlockStyle}" />
+            <TextBlock x:Name="SummaryText" Style="{StaticResource SecondaryTextStyle}" />
+        </StackPanel>
+
+        <!-- Barre d'outils -->
+        <Grid Grid.Row="1" ColumnSpacing="8">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" MaxWidth="420" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <AutoSuggestBox x:Name="SearchBox" PlaceholderText="Rechercher un programme ou un éditeur" QueryIcon="Find"
+                            TextChanged="SearchBox_TextChanged" AutomationProperties.Name="Rechercher" />
+            <ComboBox x:Name="SortCombo" Grid.Column="1" MinWidth="170" SelectedIndex="0" SelectionChanged="SortCombo_SelectionChanged"
+                      AutomationProperties.Name="Trier">
+                <ComboBoxItem Content="Trier par nom" />
+                <ComboBoxItem Content="Les plus volumineux" />
+                <ComboBoxItem Content="Les plus récents" />
+                <ComboBoxItem Content="Par éditeur" />
+                <ComboBoxItem Content="Dernière utilisation" />
+                <ComboBoxItem Content="Pas utilisés depuis 6 mois" />
+            </ComboBox>
+            <ToggleButton x:Name="MultiToggle" Grid.Column="2" HorizontalAlignment="Right" Click="MultiToggle_Click"
+                          AutomationProperties.Name="Sélection multiple" ToolTipService.ToolTip="Cocher plusieurs programmes pour les désinstaller à la suite">
+                <StackPanel Orientation="Horizontal" Spacing="8">
+                    <FontIcon Glyph="&#xE762;" FontSize="14" />
+                    <TextBlock Text="Sélection multiple" />
+                </StackPanel>
+            </ToggleButton>
+            <Button Grid.Column="3" Click="RefreshButton_Click" AutomationProperties.Name="Actualiser">
+                <StackPanel Orientation="Horizontal" Spacing="8">
+                    <FontIcon Glyph="&#xE72C;" FontSize="14" />
+                    <TextBlock Text="Actualiser" />
+                </StackPanel>
+            </Button>
+            <Button Grid.Column="4" Click="ForcedButton_Click" AutomationProperties.Name="Désinstallation forcée"
+                    ToolTipService.ToolTip="Nettoyer un programme absent de la liste ou dont le désinstalleur est cassé">
+                <StackPanel Orientation="Horizontal" Spacing="8">
+                    <FontIcon Glyph="&#xE7BA;" FontSize="14" />
+                    <TextBlock Text="Désinstallation forcée" />
+                </StackPanel>
+            </Button>
+        </Grid>
+
+        <!-- Programmes fantômes : encore listés mais désinstalleur/dossier disparus -->
+        <InfoBar x:Name="GhostBar" Grid.Row="2" IsOpen="False" IsClosable="False" Severity="Warning">
+            <InfoBar.ActionButton>
+                <Button Content="Retirer de la liste" Click="RemoveGhosts_Click" />
+            </InfoBar.ActionButton>
+        </InfoBar>
+
+        <ProgressRing x:Name="LoadingRing" Grid.Row="3" IsActive="True" Width="40" Height="40" VerticalAlignment="Center" />
+
+        <ListView x:Name="ProgramList" Grid.Row="3" SelectionMode="Single" Padding="0,0,0,24" Visibility="Collapsed"
+                  IsItemClickEnabled="False" DoubleTapped="ProgramList_DoubleTapped" SelectionChanged="ProgramList_SelectionChanged">
+            <ListView.ItemContainerStyle>
+                <Style TargetType="ListViewItem">
+                    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                    <Setter Property="Padding" Value="12,6" />
+                    <Setter Property="Margin" Value="0,1" />
+                </Style>
+            </ListView.ItemContainerStyle>
+            <ListView.ItemTemplate>
+                <DataTemplate x:DataType="models:InstalledProgram">
+                    <!-- Tag = le programme : utilisé par le clic droit -->
+                    <Grid ColumnSpacing="14" Tag="{x:Bind}" ContextRequested="Program_ContextRequested" Background="Transparent">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="110" />
+                            <ColumnDefinition Width="90" />
+                            <ColumnDefinition Width="90" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <Grid Width="32" Height="32">
+                            <FontIcon Glyph="&#xE71D;" FontSize="20" Foreground="{ThemeResource TextFillColorTertiaryBrush}"
+                                      Visibility="{x:Bind HasNoIcon, Mode=OneWay}" />
+                            <Image Source="{x:Bind Icon, Mode=OneWay}" Width="32" Height="32" />
+                        </Grid>
+                        <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                            <TextBlock Text="{x:Bind DisplayName}" Style="{StaticResource BodyStrongTextBlockStyle}" TextTrimming="CharacterEllipsis" />
+                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                <TextBlock Text="{x:Bind PublisherText}" Style="{StaticResource CaptionTextBlockStyle}"
+                                           Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextTrimming="CharacterEllipsis" />
+                                <Border Padding="6,0" CornerRadius="4" Background="{ThemeResource SubtleFillColorSecondaryBrush}"
+                                        Visibility="{x:Bind HasScope}">
+                                    <TextBlock Text="{x:Bind ScopeText}" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                                </Border>
+                            </StackPanel>
+                        </StackPanel>
+                        <TextBlock Grid.Column="2" Text="{x:Bind VersionText}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis"
+                                   Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                        <TextBlock Grid.Column="3" Text="{x:Bind SizeText}" VerticalAlignment="Center" HorizontalAlignment="Right"
+                                   Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                        <TextBlock Grid.Column="4" Text="{x:Bind DateText}" VerticalAlignment="Center" HorizontalAlignment="Right"
+                                   Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                        <Button Grid.Column="5" Content="Désinstaller" Tag="{x:Bind}" Click="UninstallButton_Click" Margin="8,0,0,0" />
+                    </Grid>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+
+        <StackPanel x:Name="EmptyPanel" Grid.Row="3" Visibility="Collapsed" HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="6">
+            <FontIcon Glyph="&#xE721;" FontSize="40" Foreground="{ThemeResource TextFillColorTertiaryBrush}" />
+            <TextBlock Text="Aucun programme ne correspond à la recherche." Style="{StaticResource SecondaryTextStyle}" />
+        </StackPanel>
+    </Grid>
+</Page>

@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Window
+    x:Class="NeoSound.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    Title="NeoSound">
+
+    <Grid x:Name="RootGrid">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="40" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <!-- Barre de titre -->
+        <Grid x:Name="AppTitleBar" Padding="14,0,0,0" ColumnSpacing="10" Background="#FF101010">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Image Source="ms-appx:///Assets/AppIcon.png" Width="18" Height="18" VerticalAlignment="Center" />
+            <TextBlock Grid.Column="1" VerticalAlignment="Center" Style="{StaticResource CaptionTextBlockStyle}">
+                <Run Text="Neo" FontWeight="SemiBold" Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}" /><Run Text="Sound" FontWeight="SemiBold" />
+            </TextBlock>
+            <TextBlock x:Name="TitleStatusText" Grid.Column="2" VerticalAlignment="Center" Margin="6,0,140,0"
+                       TextTrimming="CharacterEllipsis" Style="{StaticResource CaptionTextBlockStyle}" Foreground="#B0FFFFFF" />
+        </Grid>
+
+        <ScrollViewer Grid.Row="1" Padding="28,20,28,28" VerticalScrollBarVisibility="Auto">
+            <StackPanel Spacing="18" MaxWidth="880" HorizontalAlignment="Left">
+
+                <StackPanel Spacing="6">
+                    <TextBlock Text="Dupliquer le son vers deux casques" Style="{StaticResource TitleTextBlockStyle}" />
+                    <TextBlock Style="{StaticResource SecondaryTextStyle}" TextWrapping="Wrap"
+                               Text="Le son joué sur le périphérique source est renvoyé en même temps vers chaque casque sélectionné. Le casque source continue de jouer directement ; les casques ajoutés reçoivent une copie, avec le retard le plus faible que leur pilote autorise." />
+                </StackPanel>
+
+                <Border Style="{StaticResource CardStyle}">
+                    <StackPanel Spacing="16">
+                        <TextBlock Text="Périphériques" Style="{StaticResource SubtitleTextBlockStyle}" />
+
+                        <ComboBox x:Name="SourceCombo" Header="Source — le son à dupliquer" HorizontalAlignment="Stretch"
+                                  DisplayMemberPath="Display" SelectionChanged="SourceCombo_SelectionChanged" />
+
+                        <ComboBox x:Name="Target1Combo" Header="Casque 1 (filaire, par exemple)" HorizontalAlignment="Stretch"
+                                  DisplayMemberPath="Display" />
+
+                        <CheckBox x:Name="SecondCheck" Content="Dupliquer aussi vers un second casque"
+                                  IsChecked="True" Checked="SecondCheck_Changed" Unchecked="SecondCheck_Changed" />
+
+                        <ComboBox x:Name="Target2Combo" Header="Casque 2 (Bluetooth, par exemple)" HorizontalAlignment="Stretch"
+                                  DisplayMemberPath="Display" />
+
+                        <StackPanel Spacing="2">
+                            <TextBlock x:Name="LatencyText" Style="{StaticResource CaptionTextBlockStyle}" />
+                            <Slider x:Name="LatencySlider" Minimum="10" Maximum="150" StepFrequency="5" Value="30"
+                                    TickFrequency="20" TickPlacement="Outside" ValueChanged="LatencySlider_ValueChanged" />
+                        </StackPanel>
+
+                        <StackPanel Orientation="Horizontal" Spacing="10">
+                            <Button x:Name="StartButton" Content="Démarrer la duplication" Style="{StaticResource AccentButtonStyle}"
+                                    Click="StartButton_Click" MinWidth="200" />
+                            <Button Content="Actualiser les périphériques" Click="Refresh_Click" />
+                        </StackPanel>
+
+                        <InfoBar x:Name="StatusBar" IsOpen="False" IsClosable="True" />
+                    </StackPanel>
+                </Border>
+
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
+</Window>

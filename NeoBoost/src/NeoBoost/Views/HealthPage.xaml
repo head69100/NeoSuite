@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Page
+    x:Class="NeoBoost.Views.HealthPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <ScrollViewer Padding="36,24,36,24">
+        <StackPanel Spacing="14">
+            <TextBlock Text="État du PC" Style="{StaticResource TitleTextBlockStyle}" />
+            <TextBlock Text="La santé des disques, de la batterie et de la mémoire, comme les outils de partitionnement le voient — mais en clair."
+                       Style="{StaticResource SecondaryTextStyle}" TextWrapping="Wrap" />
+
+            <ProgressRing x:Name="LoadingRing" IsActive="True" Width="40" Height="40" HorizontalAlignment="Center" Margin="0,24" />
+
+            <StackPanel x:Name="ContentPanel" Spacing="14" Visibility="Collapsed">
+                <TextBlock Text="Disques" Style="{StaticResource TitleTextBlockStyle}" Margin="0,6,0,0" />
+                <StackPanel x:Name="DisksPanel" Spacing="10" />
+
+                <TextBlock x:Name="BatteryTitle" Text="Batterie" Style="{StaticResource TitleTextBlockStyle}" Margin="0,10,0,0" Visibility="Collapsed" />
+                <Border x:Name="BatteryCard" Style="{StaticResource CardStyle}" Visibility="Collapsed">
+                    <StackPanel Spacing="6">
+                        <TextBlock x:Name="BatteryStateText" Style="{StaticResource BodyStrongTextBlockStyle}" />
+                        <TextBlock x:Name="BatteryWearText" Style="{StaticResource SecondaryTextStyle}" TextWrapping="Wrap" />
+                    </StackPanel>
+                </Border>
+
+                <TextBlock x:Name="MemoryTitle" Text="Mémoire" Style="{StaticResource TitleTextBlockStyle}" Margin="0,10,0,0" />
+                <Border Style="{StaticResource CardStyle}">
+                    <StackPanel Spacing="6">
+                        <TextBlock x:Name="MemoryText" Style="{StaticResource BodyStrongTextBlockStyle}" />
+                        <TextBlock x:Name="MemoryAdviceText" Style="{StaticResource SecondaryTextStyle}" TextWrapping="Wrap" />
+                    </StackPanel>
+                </Border>
+            </StackPanel>
+        </StackPanel>
+    </ScrollViewer>
+</Page>

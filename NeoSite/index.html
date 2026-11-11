@@ -1,0 +1,1091 @@
+﻿<!DOCTYPE html>
+<html lang="fr" class="no-js">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>NeoSuite — Votre PC, sous contrôle</title>
+  <meta name="description" content="Neuf applications Windows françaises, un seul panneau. Pilotes, performances, nettoyage, archives, audio, médias, torrents : tout ce qui manque à Windows, réuni dans une suite sans compte, sans publicité et 100 % locale.">
+  <meta name="theme-color" content="#05070c">
+  <meta name="color-scheme" content="dark">
+
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="fr_FR">
+  <meta property="og:title" content="NeoSuite — Votre PC, sous contrôle">
+  <meta property="og:description" content="Neuf applications Windows françaises, un seul panneau. Sans compte, sans publicité, 100 % local.">
+  <meta property="og:image" content="assets/img/og.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="NeoSuite — Votre PC, sous contrôle">
+  <meta name="twitter:description" content="Neuf applications Windows françaises, un seul panneau.">
+  <meta name="twitter:image" content="assets/img/og.jpg">
+
+  <link rel="icon" type="image/png" href="assets/img/favicon.png">
+  <link rel="apple-touch-icon" href="assets/img/favicon.png">
+  <link rel="preload" href="assets/fonts/space-grotesk-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="assets/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
+
+  <link rel="stylesheet" href="assets/css/base.css">
+  <link rel="stylesheet" href="assets/css/layout.css">
+  <link rel="stylesheet" href="assets/css/components.css">
+
+  <script>
+    document.documentElement.classList.remove('no-js');
+    setTimeout(function () {
+      document.body.classList.remove('is-loading');
+      document.body.classList.add('is-ready');
+    }, 5000);
+  </script>
+  <noscript>
+    <style>
+      .boot { display: none !important; }
+      body.is-loading { overflow: auto !important; }
+      .hero [data-reveal], [data-reveal] { opacity: 1 !important; transform: none !important; }
+    </style>
+  </noscript>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "NeoSuite",
+    "applicationCategory": "UtilitiesApplication",
+    "operatingSystem": "Windows 10, Windows 11",
+    "softwareVersion": "0.5.0",
+    "inLanguage": "fr-FR",
+    "description": "Suite de neuf applications Windows : pilotes, performances, nettoyage, logiciels, archives, médias, audio et torrents.",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "EUR" }
+  }
+  </script>
+</head>
+<body class="is-loading">
+
+  <!-- ===== Sprite d'icônes ===== -->
+  <svg class="sprite" aria-hidden="true" focusable="false">
+    <defs>
+      <linearGradient id="markGrad" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0" stop-color="#8bfaff"/>
+        <stop offset=".55" stop-color="#35e6ff"/>
+        <stop offset="1" stop-color="#4d8dff"/>
+      </linearGradient>
+    </defs>
+    <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
+    <symbol id="i-arrow-down" viewBox="0 0 24 24"><path d="M12 5v14M6 13l6 6 6-6"/></symbol>
+    <symbol id="i-arrow-up" viewBox="0 0 24 24"><path d="M12 19V5M6 11l6-6 6 6"/></symbol>
+    <symbol id="i-up-right" viewBox="0 0 24 24"><path d="M7 17 17 7M8 7h9v9"/></symbol>
+    <symbol id="i-download" viewBox="0 0 24 24"><path d="M12 3v12M7 11l5 5 5-5M4 20h16"/></symbol>
+    <symbol id="i-bolt" viewBox="0 0 24 24"><path d="M13 2 4.5 13.5H11L10 22l8.5-11.5H12L13 2Z"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="m4 12.5 5 5L20 6.5"/></symbol>
+    <symbol id="i-check-circle" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m8 12 2.5 2.5L16 9"/></symbol>
+    <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m16.5 16.5 4 4"/></symbol>
+    <symbol id="i-command" viewBox="0 0 24 24"><path d="M9 6a3 3 0 1 0-3 3h12a3 3 0 1 0-3-3v12a3 3 0 1 0 3-3H6a3 3 0 1 0 3 3V6Z"/></symbol>
+    <symbol id="i-close" viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18"/></symbol>
+    <symbol id="i-chevron" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></symbol>
+    <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3 5 6v6c0 4.5 3 7.5 7 9 4-1.5 7-4.5 7-9V6l-7-3Z"/><path d="m9.5 12 1.8 1.8 3.4-3.6"/></symbol>
+    <symbol id="i-lock" viewBox="0 0 24 24"><rect x="4" y="10" width="16" height="11" rx="2.5"/><path d="M8 10V7a4 4 0 0 1 8 0v3M12 14.5v2.5"/></symbol>
+    <symbol id="i-spark" viewBox="0 0 24 24"><path d="M12 3v4M12 17v4M3 12h4M17 12h4M5.6 5.6l2.8 2.8M15.6 15.6l2.8 2.8M18.4 5.6l-2.8 2.8M8.4 15.6l-2.8 2.8"/></symbol>
+    <symbol id="i-cpu" viewBox="0 0 24 24"><rect x="6" y="6" width="12" height="12" rx="2"/><rect x="9.5" y="9.5" width="5" height="5" rx="1"/><path d="M9 2v3M15 2v3M9 19v3M15 19v3M2 9h3M2 15h3M19 9h3M19 15h3"/></symbol>
+    <symbol id="i-ram" viewBox="0 0 24 24"><rect x="2.5" y="7" width="19" height="10" rx="2"/><path d="M6 17v3M10 17v3M14 17v3M18 17v3M7 11h2M11 11h2M15 11h2"/></symbol>
+    <symbol id="i-temp" viewBox="0 0 24 24"><path d="M10 14.5V5a2 2 0 1 1 4 0v9.5a4.5 4.5 0 1 1-4 0Z"/><path d="M12 9v6"/></symbol>
+    <symbol id="i-pad" viewBox="0 0 24 24"><rect x="2.5" y="7" width="19" height="10" rx="5"/><path d="M7 10v4M5 12h4M16 11h.01M18.5 13.5h.01"/></symbol>
+    <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></symbol>
+    <symbol id="i-windows" viewBox="0 0 24 24"><path d="M3 5.5 10.5 4v7H3V5.5ZM12.5 3.7 21 2.5V11h-8.5V3.7ZM3 13h7.5v7L3 18.5V13ZM12.5 13H21v8.5L12.5 20V13Z"/></symbol>
+    <symbol id="i-gauge" viewBox="0 0 24 24"><path d="M4 18a9 9 0 1 1 16 0"/><path d="m12 14 4-4"/><circle cx="12" cy="14" r="1.4"/></symbol>
+    <symbol id="i-layers" viewBox="0 0 24 24"><path d="m12 3 9 5-9 5-9-5 9-5Z"/><path d="m3 13 9 5 9-5M3 17l9 5 9-5"/></symbol>
+    <symbol id="i-play" viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5-11-6.5Z"/></symbol>
+  </svg>
+
+  <!-- ===== Ambiances ===== -->
+  <div class="grain" aria-hidden="true"></div>
+  <div class="spotlight" aria-hidden="true"></div>
+  <div class="cursor" aria-hidden="true"><span class="cursor-dot"></span><span class="cursor-ring"></span></div>
+  <div class="scroll-progress" aria-hidden="true"><span></span></div>
+
+  <!-- ===== Démarrage ===== -->
+  <div class="boot" id="boot" aria-hidden="true">
+    <div class="boot-inner">
+      <div class="boot-top">
+        <svg class="mark mark--lg" viewBox="0 0 40 40" aria-hidden="true">
+          <rect x="1.4" y="1.4" width="37.2" height="37.2" rx="11.5"/>
+          <path d="M13 27.5v-15L27 27.5v-15"/>
+        </svg>
+        <span class="boot-code">NEO // INIT</span>
+      </div>
+      <div class="boot-bar"><i id="bootBar"></i></div>
+      <div class="boot-bottom">
+        <span>Chargement du panneau</span>
+        <span class="boot-pct" id="bootPct">00</span>
+      </div>
+      <div class="boot-log" id="bootLog"></div>
+    </div>
+  </div>
+
+  <a class="skip-link" href="#contenu">Aller au contenu</a>
+
+  <!-- ===== Navigation ===== -->
+  <header class="nav" id="nav">
+    <div class="nav-inner container">
+      <a class="brand" href="#haut" aria-label="NeoSuite, retour en haut">
+        <svg class="mark" viewBox="0 0 40 40" aria-hidden="true">
+          <rect x="1.4" y="1.4" width="37.2" height="37.2" rx="11.5"/>
+          <path d="M13 27.5v-15L27 27.5v-15"/>
+        </svg>
+        <span class="brand-name">NeoSuite</span>
+        <span class="brand-ver">0.5.0</span>
+      </a>
+
+      <nav class="nav-links" aria-label="Navigation principale">
+        <a href="#suite" data-nav="suite">La suite</a>
+        <a href="#boost" data-nav="boost">Boost</a>
+        <a href="#promesses" data-nav="promesses">Promesses</a>
+        <a href="#faq" data-nav="faq">FAQ</a>
+      </nav>
+
+      <div class="nav-actions">
+        <button class="kbd-btn" type="button" data-palette-open aria-label="Ouvrir la palette de commandes">
+          <svg class="ico"><use href="#i-search"/></svg>
+          <span>Rechercher</span>
+          <kbd>Ctrl K</kbd>
+        </button>
+        <a class="btn btn-primary btn-sm magnetic" href="#telecharger" data-download>
+          <span>Installer</span>
+          <svg class="ico"><use href="#i-download"/></svg>
+        </a>
+        <button class="burger" type="button" aria-label="Ouvrir le menu" aria-expanded="false" aria-controls="mobileMenu" data-burger>
+          <span></span><span></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <div class="mobile-menu" id="mobileMenu" aria-hidden="true">
+    <div class="mobile-menu-inner">
+      <p class="mobile-menu-label">Navigation</p>
+      <a href="#suite"><span>01</span>La suite</a>
+      <a href="#boost"><span>02</span>Le mode Boost</a>
+      <a href="#promesses"><span>03</span>Nos promesses</a>
+      <a href="#installation"><span>04</span>Installation</a>
+      <a href="#faq"><span>05</span>Questions</a>
+      <div class="mobile-menu-foot">
+        <a class="btn btn-primary btn-wide" href="#telecharger" data-download><span>Installer NeoSuite</span><svg class="ico"><use href="#i-download"/></svg></a>
+        <p>Windows 10 / 11 · x64 · sans compte</p>
+      </div>
+    </div>
+  </div>
+
+  <main id="contenu">
+    <!-- ===== HÉRO ===== -->
+    <section class="hero" id="haut">
+      <div class="hero-canvas-wrap" aria-hidden="true">
+        <canvas id="heroCanvas"></canvas>
+        <div class="hero-grid"></div>
+        <div class="hero-glow hero-glow--a"></div>
+        <div class="hero-glow hero-glow--b"></div>
+      </div>
+
+      <div class="hero-inner container">
+        <div class="hero-copy">
+          <p class="eyebrow" data-reveal>
+            <span class="live-dot"></span>
+            Suite Windows <span class="sep">/</span> .NET 10 <span class="sep">/</span> WinUI 3
+          </p>
+
+          <h1 class="hero-title">
+            <span class="line"><span>Votre PC,</span></span>
+            <span class="line"><span class="grad-text">sous contrôle.</span></span>
+          </h1>
+
+          <p class="hero-lede" data-reveal data-reveal-delay="1">
+            Neuf applications françaises, un seul panneau. Pilotes, performances,
+            nettoyage, archives, audio, médias, torrents : tout ce qui manque à Windows,
+            réuni dans une suite qui ne vous espionne pas.
+          </p>
+
+          <div class="hero-cta" data-reveal data-reveal-delay="2">
+            <a class="btn btn-primary btn-lg magnetic" href="#telecharger" data-download>
+              <span>Installer NeoSuite</span>
+              <svg class="ico"><use href="#i-download"/></svg>
+            </a>
+            <a class="btn btn-ghost btn-lg magnetic" href="#suite">
+              <span>Explorer la suite</span>
+              <svg class="ico"><use href="#i-arrow-down"/></svg>
+            </a>
+          </div>
+
+          <ul class="hero-meta" data-reveal data-reveal-delay="3">
+            <li><svg class="ico"><use href="#i-windows"/></svg> Windows 10 &amp; 11 · x64</li>
+            <li><svg class="ico"><use href="#i-lock"/></svg> Sans compte</li>
+            <li><svg class="ico"><use href="#i-shield"/></svg> 100 % local</li>
+          </ul>
+        </div>
+
+        <!-- Panneau NeoSuite -->
+        <div class="hero-visual" aria-hidden="true">
+          <div class="panel-orbit"></div>
+          <div class="panel-halo"></div>
+
+          <div class="panel-tilt" data-tilt="9">
+            <div class="panel">
+              <div class="panel-top">
+                <span class="traffic"><i></i><i></i><i></i></span>
+                <span class="panel-title">NeoSuite <em>— Panneau</em></span>
+                <span class="panel-shortcut">Ctrl <b>+</b> Alt <b>+</b> N</span>
+              </div>
+
+              <div class="panel-body">
+                <aside class="panel-rail">
+                  <svg class="mark mark--sm" viewBox="0 0 40 40">
+                    <rect x="1.4" y="1.4" width="37.2" height="37.2" rx="11.5"/>
+                    <path d="M13 27.5v-15L27 27.5v-15"/>
+                  </svg>
+                  <span class="rail-item is-active"><svg class="ico"><use href="#i-layers"/></svg></span>
+                  <span class="rail-item"><svg class="ico"><use href="#i-gauge"/></svg></span>
+                  <span class="rail-item"><svg class="ico"><use href="#i-bolt"/></svg></span>
+                  <span class="rail-item"><svg class="ico"><use href="#i-download"/></svg></span>
+                  <span class="rail-spacer"></span>
+                  <span class="rail-avatar">D</span>
+                </aside>
+
+                <div class="panel-main">
+                  <div class="panel-heading">
+                    <div>
+                      <span class="panel-hello">Bonjour David,</span>
+                      <strong>Votre PC est prêt.</strong>
+                    </div>
+                    <span class="status-pill status-pill--ok"><i></i>Tout est à jour</span>
+                  </div>
+
+                  <div class="tile-grid">
+                    <div class="tile">
+                      <img src="assets/img/neodriver.jpg" alt="" width="64" height="64" class="tile-ico" loading="lazy">
+                      <div class="tile-txt"><b>NeoDriver</b><span><i class="dot dot--ok"></i>À jour</span></div>
+                    </div>
+                    <div class="tile">
+                      <img src="assets/img/neoboost.jpg" alt="" width="64" height="64" class="tile-ico" loading="lazy">
+                      <div class="tile-txt"><b>NeoBoost</b><span><i class="dot dot--on"></i>Boost actif</span></div>
+                    </div>
+                    <div class="tile">
+                      <img src="assets/img/neouninstaller.jpg" alt="" width="64" height="64" class="tile-ico" loading="lazy">
+                      <div class="tile-txt"><b>NeoUninstaller</b><span><i class="dot"></i>Prêt</span></div>
+                    </div>
+                    <div class="tile">
+                      <img src="assets/img/neosoft.png" alt="" width="64" height="64" class="tile-ico tile-ico--suite" loading="lazy">
+                      <div class="tile-txt"><b>NeoSoft</b><span><i class="dot dot--warn"></i>12 mises à jour</span></div>
+                    </div>
+                    <div class="tile">
+                      <img src="assets/img/neorar.jpg" alt="" width="64" height="64" class="tile-ico" loading="lazy">
+                      <div class="tile-txt"><b>NeoRar</b><span><i class="dot"></i>Prêt</span></div>
+                    </div>
+                    <div class="tile">
+                      <img src="assets/img/neosound.jpg" alt="" width="64" height="64" class="tile-ico" loading="lazy">
+                      <div class="tile-txt"><b>NeoSound</b><span><i class="dot dot--on"></i>2 casques</span></div>
+                    </div>
+                    <div class="tile">
+                      <img src="assets/img/neomedia.jpg" alt="" width="64" height="64" class="tile-ico" loading="lazy">
+                      <div class="tile-txt"><b>NeoMedia</b><span><i class="dot"></i>Prêt</span></div>
+                    </div>
+                    <div class="tile">
+                      <img src="assets/img/neotorrent.jpg" alt="" width="64" height="64" class="tile-ico" loading="lazy">
+                      <div class="tile-txt"><b>NeoTorrent</b><span><i class="dot dot--on"></i>2 torrents</span></div>
+                    </div>
+                  </div>
+
+                  <div class="panel-boost">
+                    <div class="panel-boost-info">
+                      <span class="panel-boost-ico"><svg class="ico"><use href="#i-bolt"/></svg></span>
+                      <div><b>Mode Boost</b><span>144 Hz · 41 % de mémoire</span></div>
+                    </div>
+                    <div class="eq" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
+                    <span class="switch is-on"><i></i></span>
+                  </div>
+                </div>
+              </div>
+              <div class="panel-scan"></div>
+            </div>
+          </div>
+
+          <div class="float-chip float-chip--a">
+            <span class="chip-ico"><svg class="ico"><use href="#i-check-circle"/></svg></span>
+            <div><b>3 pilotes à jour</b><span>NeoDriver · scan terminé</span></div>
+          </div>
+          <div class="float-chip float-chip--b">
+            <span class="chip-ico chip-ico--bolt"><svg class="ico"><use href="#i-bolt"/></svg></span>
+            <div><b>Mode Boost actif</b><span>12 programmes suspendus</span></div>
+          </div>
+          <div class="float-chip float-chip--c">
+            <span class="chip-ico chip-ico--lock"><svg class="ico"><use href="#i-lock"/></svg></span>
+            <div><b>0 octet envoyé</b><span>Aucune télémétrie</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="hero-foot container">
+        <a class="scroll-cue" href="#manifeste">
+          <span class="scroll-cue-line"><i></i></span>
+          <span>Défiler</span>
+        </a>
+        <div class="hero-index">
+          <span>NEO-SUITE</span>
+          <span class="hero-index-line"></span>
+          <span>0.5.0 / 2026</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== BANDEAU DÉFILANT ===== -->
+    <div class="marquee" aria-hidden="true">
+      <div class="marquee-track">
+        <span>Pilotes <i>✳</i> Performances <i>✳</i> Nettoyage <i>✳</i> Logiciels <i>✳</i> Archives <i>✳</i> Médias <i>✳</i> Audio <i>✳</i> Torrents <i>✳</i> Français <i>✳</i></span>
+        <span>Pilotes <i>✳</i> Performances <i>✳</i> Nettoyage <i>✳</i> Logiciels <i>✳</i> Archives <i>✳</i> Médias <i>✳</i> Audio <i>✳</i> Torrents <i>✳</i> Français <i>✳</i></span>
+      </div>
+    </div>
+
+    <!-- ===== MANIFESTE ===== -->
+    <section class="manifesto section" id="manifeste">
+      <div class="container manifesto-grid">
+        <aside class="manifesto-side" data-reveal>
+          <p class="section-tag">Le manifeste</p>
+          <p class="manifesto-aside">Moins de fenêtres.<br>Plus de résultats.</p>
+          <div class="manifesto-rule"><span></span></div>
+        </aside>
+
+        <div class="manifesto-body">
+          <p class="manifesto-text" data-words>
+            Un utilitaire Windows, c’est souvent trois publicités avant le premier bouton.
+            NeoSuite prend le contrepied : des applications qui font une chose, la font bien,
+            et s’effacent. <strong>Pas de compte. Pas de télémétrie. Pas de « Pro ».</strong>
+            Un panneau, une touche, et un PC qui répond — même trois ans après l’achat.
+          </p>
+
+          <div class="stats" data-reveal>
+            <div class="stat">
+              <span class="stat-num"><span data-count="9" data-pad="2">09</span></span>
+              <span class="stat-label">applications natives</span>
+            </div>
+            <div class="stat">
+              <span class="stat-num"><span data-count="1" data-pad="2">01</span></span>
+              <span class="stat-label">installateur unique</span>
+            </div>
+            <div class="stat">
+              <span class="stat-num"><span data-count="0" data-pad="2">00</span></span>
+              <span class="stat-label">publicité, bundle, compte</span>
+            </div>
+            <div class="stat">
+              <span class="stat-num"><span data-count="100">100</span><small>%</small></span>
+              <span class="stat-label">local et français</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== LA SUITE ===== -->
+    <section class="suite" id="suite" data-suite>
+      <div class="suite-pin">
+        <div class="container suite-head">
+          <div class="suite-head-left">
+            <p class="section-tag">01 — La suite</p>
+            <h2 class="h2">Neuf applis.<br><span class="grad-text">Un seul réflexe.</span></h2>
+          </div>
+          <div class="suite-head-right">
+            <p>Chaque outil vit sa vie, mais tous obéissent au même panneau.
+              <span>Ctrl + Alt + N</span>, où que vous soyez.</p>
+            <div class="suite-progress">
+              <span data-suite-current>01</span>
+              <div class="suite-progress-bar"><i data-suite-bar></i></div>
+              <span>09</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="suite-viewport">
+          <div class="suite-track" data-suite-track>
+
+            <article class="app-card app-card--suite" style="--accent:#35e6ff;--accent-2:#3d7bff" data-app="NeoSuite">
+              <div class="card-head">
+                <span class="card-index">01</span>
+                <span class="card-cat">Le panneau</span>
+                <span class="card-ver">v0.5.0</span>
+              </div>
+              <div class="card-media">
+                <img class="app-logo app-logo--suite" src="assets/img/neosuite.png" alt="" width="360" height="360" loading="lazy">
+                <span class="card-glow"></span>
+              </div>
+              <div class="card-body">
+                <h3>NeoSuite</h3>
+                <p>Un raccourci, toutes vos applis. Le panneau qui installe, met à jour et lance le reste.</p>
+                <ul class="card-feats">
+                  <li>Ctrl + Alt + N depuis n’importe quelle fenêtre</li>
+                  <li>Installation et mises à jour en un clic</li>
+                  <li>Élévation en administrateur seulement quand il faut</li>
+                </ul>
+              </div>
+              <div class="card-foot">
+                <span class="card-status"><i class="dot dot--on"></i>Toujours là</span>
+                <span class="card-tag">Système</span>
+              </div>
+            </article>
+
+            <article class="app-card" style="--accent:#38e2ff;--accent-2:#2f7bff" data-app="NeoDriver">
+              <div class="card-head">
+                <span class="card-index">02</span>
+                <span class="card-cat">Pilotes</span>
+                <span class="card-ver">v0.2.2</span>
+              </div>
+              <div class="card-media">
+                <img class="app-logo" src="assets/img/neodriver.jpg" alt="" width="720" height="720" loading="lazy">
+                <span class="card-glow"></span>
+              </div>
+              <div class="card-body">
+                <h3>NeoDriver</h3>
+                <p>Les pilotes, sans les boîtes de dialogue. Détecte, explique, installe — et sait revenir en arrière.</p>
+                <ul class="card-feats">
+                  <li>Périphériques en erreur expliqués en français</li>
+                  <li>Installation .inf avec point de restauration</li>
+                  <li>Scan hebdomadaire même quand l’appli est fermée</li>
+                </ul>
+              </div>
+              <div class="card-foot">
+                <span class="card-status"><i class="dot dot--ok"></i>À jour</span>
+                <span class="card-tag">Système</span>
+              </div>
+            </article>
+
+            <article class="app-card" style="--accent:#5ee7ff;--accent-2:#7c5cff" data-app="NeoBoost">
+              <div class="card-head">
+                <span class="card-index">03</span>
+                <span class="card-cat">Performances</span>
+                <span class="card-ver">v0.3.2</span>
+              </div>
+              <div class="card-media">
+                <img class="app-logo" src="assets/img/neoboost.jpg" alt="" width="720" height="720" loading="lazy">
+                <span class="card-glow"></span>
+              </div>
+              <div class="card-body">
+                <h3>NeoBoost</h3>
+                <p>Le mode Boost qui s’explique : il suspend, il priorise, il remet tout en place. Et il prouve ses dires.</p>
+                <ul class="card-feats">
+                  <li>Programmes gourmands suspendus, pas tués</li>
+                  <li>Historique CPU / mémoire sur 30 minutes</li>
+                  <li>Santé des disques, de la batterie et de la mémoire</li>
+                </ul>
+              </div>
+              <div class="card-foot">
+                <span class="card-status"><i class="dot dot--on"></i>Boost actif</span>
+                <span class="card-tag">Performances</span>
+              </div>
+            </article>
+
+            <article class="app-card" style="--accent:#6ff2ff;--accent-2:#2f7bff" data-app="NeoUninstaller">
+              <div class="card-head">
+                <span class="card-index">04</span>
+                <span class="card-cat">Nettoyage</span>
+                <span class="card-ver">v0.2.6</span>
+              </div>
+              <div class="card-media">
+                <img class="app-logo" src="assets/img/neouninstaller.jpg" alt="" width="720" height="720" loading="lazy">
+                <span class="card-glow"></span>
+              </div>
+              <div class="card-body">
+                <h3>NeoUninstaller</h3>
+                <p>Désinstaller vraiment. Programmes, restes, pilotes orphelins : ce qui part ne revient pas.</p>
+                <ul class="card-feats">
+                  <li>Dossiers, registre et services nettoyés</li>
+                  <li>Pilotes orphelins repérés sans fausse alerte</li>
+                  <li>Démarrage de Windows maîtrisé</li>
+                </ul>
+              </div>
+              <div class="card-foot">
+                <span class="card-status"><i class="dot"></i>Prêt</span>
+                <span class="card-tag">Nettoyage</span>
+              </div>
+            </article>
+
+            <article class="app-card" style="--accent:#4dd6ff;--accent-2:#4d8dff" data-app="NeoSoft">
+              <div class="card-head">
+                <span class="card-index">05</span>
+                <span class="card-cat">Logiciels</span>
+                <span class="card-ver">v0.3.1</span>
+              </div>
+              <div class="card-media">
+                <img class="app-logo app-logo--suite" src="assets/img/neosoft.png" alt="" width="360" height="360" loading="lazy">
+                <span class="card-glow"></span>
+              </div>
+              <div class="card-body">
+                <h3>NeoSoft</h3>
+                <p>Le catalogue qui cite ses sources. winget, les applis Neo, et rien d’autre que ce que vous demandez.</p>
+                <ul class="card-feats">
+                  <li>Sources officielles, catégories claires</li>
+                  <li>Recherche étendue, paquets marqués « non vérifié »</li>
+                  <li>Mises à jour groupées, sans bundle</li>
+                </ul>
+              </div>
+              <div class="card-foot">
+                <span class="card-status"><i class="dot dot--warn"></i>12 mises à jour</span>
+                <span class="card-tag">Logiciels</span>
+              </div>
+            </article>
+
+            <article class="app-card" style="--accent:#7af7ff;--accent-2:#3d7bff" data-app="NeoRar">
+              <div class="card-head">
+                <span class="card-index">06</span>
+                <span class="card-cat">Archives</span>
+                <span class="card-ver">v0.2.1</span>
+              </div>
+              <div class="card-media">
+                <img class="app-logo" src="assets/img/neorar.jpg" alt="" width="720" height="720" loading="lazy">
+                <span class="card-glow"></span>
+              </div>
+              <div class="card-body">
+                <h3>NeoRar</h3>
+                <p>7-Zip au moteur, une vraie interface autour. Vos archives méritent mieux qu’un menu de 1998.</p>
+                <ul class="card-feats">
+                  <li>RAR, ZIP, 7z, TAR, GZ, ISO en lecture</li>
+                  <li>AES-256, volumes .001, vérification CRC</li>
+                  <li>Sauvegardes planifiées dans Windows</li>
+                </ul>
+              </div>
+              <div class="card-foot">
+                <span class="card-status"><i class="dot"></i>Prêt</span>
+                <span class="card-tag">Archives</span>
+              </div>
+            </article>
+
+            <article class="app-card" style="--accent:#63e8ff;--accent-2:#8b5cf6" data-app="NeoMedia">
+              <div class="card-head">
+                <span class="card-index">07</span>
+                <span class="card-cat">Médias</span>
+                <span class="card-ver">v0.1.1</span>
+              </div>
+              <div class="card-media">
+                <img class="app-logo" src="assets/img/neomedia.jpg" alt="" width="720" height="720" loading="lazy">
+                <span class="card-glow"></span>
+              </div>
+              <div class="card-body">
+                <h3>NeoMedia</h3>
+                <p>VLC sans le menu de 1998. Vos vidéos s’ouvrent vite, se reprennent où vous les avez laissées.</p>
+                <ul class="card-feats">
+                  <li>Décodage matériel par la carte graphique</li>
+                  <li>Vitesse, pistes, sous-titres, capture</li>
+                  <li>« Lire avec NeoMedia » dans l’Explorateur</li>
+                </ul>
+              </div>
+              <div class="card-foot">
+                <span class="card-status"><i class="dot"></i>Prêt</span>
+                <span class="card-tag">Médias</span>
+              </div>
+            </article>
+
+            <article class="app-card" style="--accent:#7af7ff;--accent-2:#4d8dff" data-app="NeoSound">
+              <div class="card-head">
+                <span class="card-index">08</span>
+                <span class="card-cat">Audio</span>
+                <span class="card-ver">v0.2.0</span>
+              </div>
+              <div class="card-media">
+                <img class="app-logo" src="assets/img/neosound.jpg" alt="" width="720" height="720" loading="lazy">
+                <span class="card-glow"></span>
+              </div>
+              <div class="card-body">
+                <h3>NeoSound</h3>
+                <p>Deux casques, un seul PC. Le filaire et le Bluetooth en même temps, sans grésillement.</p>
+                <ul class="card-feats">
+                  <li>Latence réglable, horloges recalées</li>
+                  <li>Un casque lâche ? Les autres continuent</li>
+                  <li>Dit franchement ce que Windows ne sait pas faire</li>
+                </ul>
+              </div>
+              <div class="card-foot">
+                <span class="card-status"><i class="dot dot--on"></i>2 casques</span>
+                <span class="card-tag">Audio</span>
+              </div>
+            </article>
+
+            <article class="app-card" style="--accent:#4fe6ff;--accent-2:#2f7bff" data-app="NeoTorrent">
+              <div class="card-head">
+                <span class="card-index">09</span>
+                <span class="card-cat">Téléchargements</span>
+                <span class="card-ver">v0.1.0</span>
+              </div>
+              <div class="card-media">
+                <img class="app-logo" src="assets/img/neotorrent.jpg" alt="" width="512" height="512" loading="lazy">
+                <span class="card-glow"></span>
+              </div>
+              <div class="card-body">
+                <h3>NeoTorrent</h3>
+                <p>Les torrents, sans client qui ressemble à un tableau de bord de centrale nucléaire.</p>
+                <ul class="card-feats">
+                  <li>Fichiers .torrent et liens magnet</li>
+                  <li>Progression, vitesses et temps restant</li>
+                  <li>Dossier de téléchargement personnalisable</li>
+                </ul>
+              </div>
+              <div class="card-foot">
+                <span class="card-status"><i class="dot dot--on"></i>2 torrents</span>
+                <span class="card-tag">Téléchargements</span>
+              </div>
+            </article>
+
+          </div>
+        </div>
+
+        <div class="container suite-foot">
+          <span class="suite-hint"><span class="suite-hint-line"></span>Faites défiler pour parcourir</span>
+          <span class="suite-count"><b data-suite-app>NeoSuite</b> — le panneau</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== DÉMO BOOST ===== -->
+    <section class="boost section" id="boost">
+      <div class="container boost-grid">
+        <div class="boost-copy">
+          <p class="section-tag" data-reveal>02 — Le mode Boost</p>
+          <h2 class="h2" data-reveal>Le boost<br><span class="grad-text">qui s’explique.</span></h2>
+          <p class="boost-lede" data-reveal>
+            NeoBoost ne « nettoie » pas la mémoire avec un balai magique.
+            Il suspend les programmes gourmands, donne la priorité à ce que vous utilisez,
+            et remet tout en place quand vous avez fini. Chaque étape est visible.
+          </p>
+
+          <ul class="feature-list">
+            <li data-reveal>
+              <span class="feature-num">01</span>
+              <div><b>Priorité au premier plan</b><p>Le jeu ou l’application active reçoit le processeur en premier.</p></div>
+            </li>
+            <li data-reveal>
+              <span class="feature-num">02</span>
+              <div><b>Suspendu, pas tué</b><p>Les programmes lourds sont mis en pause et restaurés au pixel près.</p></div>
+            </li>
+            <li data-reveal>
+              <span class="feature-num">03</span>
+              <div><b>Retour arrière garanti</b><p>Tout revient à l’état initial, même après un redémarrage imprévu.</p></div>
+            </li>
+            <li data-reveal>
+              <span class="feature-num">04</span>
+              <div><b>Des preuves, pas des promesses</b><p>Historique CPU et mémoire sur 30 minutes, pics horodatés.</p></div>
+            </li>
+          </ul>
+
+          <p class="demo-note" data-reveal>
+            <svg class="ico"><use href="#i-shield"/></svg>
+            Démo interactive. Rien n’est modifié sur votre PC.
+          </p>
+        </div>
+
+        <!-- Console NeoBoost -->
+        <div class="boost-demo" data-reveal>
+          <div class="console" id="boostConsole">
+            <div class="console-top">
+              <span class="traffic"><i></i><i></i><i></i></span>
+              <span class="console-title"><svg class="ico"><use href="#i-bolt"/></svg> NeoBoost <em>— État du PC</em></span>
+              <span class="console-badge" data-boost-state>Prêt</span>
+            </div>
+
+            <div class="console-body">
+              <div class="gauges">
+                <div class="gauge" data-gauge="cpu" data-value="78">
+                  <svg viewBox="0 0 120 120" aria-hidden="true">
+                    <circle class="gauge-track" cx="60" cy="60" r="52"/>
+                    <circle class="gauge-fill" cx="60" cy="60" r="52"/>
+                  </svg>
+                  <div class="gauge-label">
+                    <strong><span data-gauge-value>78</span><small>%</small></strong>
+                    <span>Processeur</span>
+                  </div>
+                </div>
+                <div class="gauge" data-gauge="ram" data-value="71">
+                  <svg viewBox="0 0 120 120" aria-hidden="true">
+                    <circle class="gauge-track" cx="60" cy="60" r="52"/>
+                    <circle class="gauge-fill" cx="60" cy="60" r="52"/>
+                  </svg>
+                  <div class="gauge-label">
+                    <strong><span data-gauge-value>71</span><small>%</small></strong>
+                    <span>Mémoire</span>
+                  </div>
+                </div>
+                <div class="gauge gauge--temp" data-gauge="temp" data-value="68">
+                  <svg viewBox="0 0 120 120" aria-hidden="true">
+                    <circle class="gauge-track" cx="60" cy="60" r="52"/>
+                    <circle class="gauge-fill" cx="60" cy="60" r="52"/>
+                  </svg>
+                  <div class="gauge-label">
+                    <strong><span data-gauge-value>68</span><small>°C</small></strong>
+                    <span>Température</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="chart-wrap">
+                <div class="chart-head">
+                  <span>Charge processeur <em>· 30 dernières minutes</em></span>
+                  <span class="chart-fps"><svg class="ico"><use href="#i-pad"/></svg><b data-fps>63</b> FPS</span>
+                </div>
+                <canvas id="boostChart" height="120"></canvas>
+                <div class="chart-axis"><span>-30 min</span><span>-15 min</span><span>maintenant</span></div>
+              </div>
+
+              <div class="proc-block">
+                <div class="proc-head">
+                  <span>Programmes gourmands</span>
+                  <span><b data-proc-count>4</b> actifs</span>
+                </div>
+                <ul class="proc-list" id="procList">
+                  <li class="proc" data-load="24">
+                    <span class="proc-ico" style="--c:#a78bfa">Pr</span>
+                    <div class="proc-name"><b>Adobe Premiere Pro</b><span>Montage vidéo</span></div>
+                    <span class="proc-cpu">24 %</span>
+                    <span class="proc-mem">3,8 Go</span>
+                    <button class="proc-stop" type="button" aria-label="Suspendre Adobe Premiere Pro">Suspendre</button>
+                  </li>
+                  <li class="proc" data-load="12">
+                    <span class="proc-ico" style="--c:#4d8dff">Na</span>
+                    <div class="proc-name"><b>Navigateur</b><span>18 onglets ouverts</span></div>
+                    <span class="proc-cpu">12 %</span>
+                    <span class="proc-mem">2,1 Go</span>
+                    <button class="proc-stop" type="button" aria-label="Suspendre le navigateur">Suspendre</button>
+                  </li>
+                  <li class="proc" data-load="9">
+                    <span class="proc-ico" style="--c:#35e6ff">St</span>
+                    <div class="proc-name"><b>Steam</b><span>Client en arrière-plan</span></div>
+                    <span class="proc-cpu">9 %</span>
+                    <span class="proc-mem">1,2 Go</span>
+                    <button class="proc-stop" type="button" aria-label="Suspendre Steam">Suspendre</button>
+                  </li>
+                  <li class="proc" data-load="7">
+                    <span class="proc-ico" style="--c:#fbbf24">OB</span>
+                    <div class="proc-name"><b>OBS Studio</b><span>Scène en pause</span></div>
+                    <span class="proc-cpu">7 %</span>
+                    <span class="proc-mem">940 Mo</span>
+                    <button class="proc-stop" type="button" aria-label="Suspendre OBS Studio">Suspendre</button>
+                  </li>
+                </ul>
+              </div>
+
+              <div class="boost-log" id="boostLog" aria-live="polite">
+                <span class="log-line is-idle"><i>›</i> En attente d’une action.</span>
+              </div>
+
+              <button class="boost-btn" id="boostBtn" type="button" aria-pressed="false">
+                <span class="boost-btn-glow"></span>
+                <span class="boost-btn-ico"><svg class="ico"><use href="#i-bolt"/></svg></span>
+                <span class="boost-btn-txt" data-boost-label>Activer le mode Boost</span>
+                <span class="boost-btn-progress" data-boost-progress></span>
+              </button>
+
+              <div class="boost-result">
+                <span><b data-freed>0</b> Mo libérés</span>
+                <span class="boost-result-sep"></span>
+                <span><b data-suspended>0</b> suspendus</span>
+                <span class="boost-result-sep"></span>
+                <span>Session réversible</span>
+              </div>
+            </div>
+          </div>
+          <div class="console-glow" aria-hidden="true"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== PROMESSES ===== -->
+    <section class="promises section" id="promesses">
+      <div class="container">
+        <div class="promises-head">
+          <div>
+            <p class="section-tag" data-reveal>03 — Nos promesses</p>
+            <h2 class="h2" data-reveal>Ce que nous<br><span class="grad-text">ne ferons jamais.</span></h2>
+          </div>
+          <p class="promises-lede" data-reveal>Une suite installée sur votre PC devrait vous laisser tranquille.
+            Voici les trois règles qu’on s’est données — et qu’on tiendra.</p>
+        </div>
+
+        <div class="promise-grid">
+          <article class="promise" data-reveal>
+            <span class="promise-num">01</span>
+            <span class="promise-ico"><svg class="ico"><use href="#i-lock"/></svg></span>
+            <h3>Vos données restent chez vous.</h3>
+            <p>Aucune télémétrie, aucun compte, aucun serveur tiers. NeoDriver interroge Windows Update, comme Windows lui-même. Le reste ne sort pas.</p>
+            <span class="promise-line"></span>
+          </article>
+          <article class="promise" data-reveal>
+            <span class="promise-num">02</span>
+            <span class="promise-ico"><svg class="ico"><use href="#i-shield"/></svg></span>
+            <h3>Chaque changement a un retour.</h3>
+            <p>Point de restauration avant un pilote, retour à la version précédente, désinstallation qui nettoie derrière elle. Rien d’irréversible.</p>
+            <span class="promise-line"></span>
+          </article>
+          <article class="promise" data-reveal>
+            <span class="promise-num">03</span>
+            <span class="promise-ico"><svg class="ico"><use href="#i-spark"/></svg></span>
+            <h3>Une interface qui parle français.</h3>
+            <p>Des messages clairs, des termes exacts, pas de jargon traduit à la va-vite. Et pas de publicité déguisée en recommandation.</p>
+            <span class="promise-line"></span>
+          </article>
+        </div>
+
+        <div class="promise-strip" data-reveal>
+          <span><svg class="ico"><use href="#i-check"/></svg> Sans publicité</span>
+          <span><svg class="ico"><use href="#i-check"/></svg> Sans compte</span>
+          <span><svg class="ico"><use href="#i-check"/></svg> Sans bundle</span>
+          <span><svg class="ico"><use href="#i-check"/></svg> Sans version « Pro »</span>
+          <span><svg class="ico"><use href="#i-check"/></svg> Sans télémétrie</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== INSTALLATION ===== -->
+    <section class="install section" id="installation">
+      <div class="container install-grid">
+        <div class="install-copy">
+          <p class="section-tag" data-reveal>04 — Installation</p>
+          <h2 class="h2" data-reveal>Trois minutes.<br><span class="grad-text">Une seule touche.</span></h2>
+          <p class="install-lede" data-reveal>Pas de compte, pas de questionnaire, pas de redémarrage surprise.
+            Vous choisissez vos applis, NeoSuite s’occupe du reste.</p>
+
+          <ol class="steps">
+            <li data-reveal>
+              <span class="step-num">01</span>
+              <div class="step-body">
+                <b>Téléchargez NeoSuite</b>
+                <p>Un seul installateur, signé, pour Windows 10 et 11 en 64 bits.</p>
+              </div>
+              <span class="step-line"></span>
+            </li>
+            <li data-reveal>
+              <span class="step-num">02</span>
+              <div class="step-body">
+                <b>Choisissez vos applications</b>
+                <p>Installez la suite complète ou seulement ce dont vous avez besoin.</p>
+              </div>
+              <span class="step-line"></span>
+            </li>
+            <li data-reveal>
+              <span class="step-num">03</span>
+              <div class="step-body">
+                <b>Appuyez sur Ctrl + Alt + N</b>
+                <p>Le panneau s’ouvre par-dessus vos fenêtres. C’est tout.</p>
+              </div>
+            </li>
+          </ol>
+        </div>
+
+        <div class="install-card" id="telecharger" data-reveal>
+          <div class="terminal">
+            <div class="terminal-top">
+              <span class="traffic"><i></i><i></i><i></i></span>
+              <span class="terminal-tab">neo-install.log</span>
+              <span class="terminal-live"><i></i>prêt</span>
+            </div>
+            <div class="terminal-body" data-terminal>
+              <p class="term-line term-cmd"><span class="term-prompt">›</span> NeoSuite-Setup.exe<span class="term-caret"></span></p>
+              <p class="term-line term-ok"><span>✓</span> Windows 11 24H2 · x64 détecté</p>
+              <p class="term-line term-ok"><span>✓</span> 9 applications prêtes à installer</p>
+              <p class="term-line term-ok"><span>✓</span> Point de restauration créé</p>
+              <p class="term-line term-ok"><span>✓</span> Installation terminée en 02:47</p>
+              <p class="term-line term-dim">› NeoSuite est prêt. Ctrl + Alt + N.</p>
+            </div>
+
+            <div class="specs">
+              <div class="spec"><span>Version</span><b>0.5.0</b></div>
+              <div class="spec"><span>Plateforme</span><b>Windows 10 / 11 · x64</b></div>
+              <div class="spec"><span>Contenu</span><b>NeoSuite + 8 applis</b></div>
+              <div class="spec"><span>Taille</span><b>824 Mo</b></div>
+              <div class="spec"><span>Compte</span><b>Aucun</b></div>
+              <div class="spec"><span>Langue</span><b>Français</b></div>
+            </div>
+
+            <a class="btn btn-primary btn-lg btn-wide magnetic" href="#" data-download>
+              <span>Télécharger pour Windows</span>
+              <svg class="ico"><use href="#i-download"/></svg>
+            </a>
+            <p class="download-note">
+              <svg class="ico"><use href="#i-shield"/></svg>
+              Installation en administrateur · désinstallation propre
+            </p>
+          </div>
+
+          <div class="install-meta">
+            <button class="link-btn" type="button" data-release-open>
+              <svg class="ico"><use href="#i-arrow-up"/></svg>
+              Nouveautés 0.5.0
+            </button>
+            <span>·</span>
+            <a class="link-btn" href="https://github.com/head69100/NeoSuite/blob/main/NeoSuite/CHANGELOG.md" target="_blank" rel="noopener">Journal complet</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== FAQ ===== -->
+    <section class="faq section" id="faq">
+      <div class="container faq-grid">
+        <div class="faq-side">
+          <p class="section-tag" data-reveal>05 — Questions</p>
+          <h2 class="h2" data-reveal>Les réponses<br><span class="grad-text">courtes.</span></h2>
+          <p data-reveal>Une question qui n’est pas là ?<br>
+            <a href="#telecharger" class="text-link">Le journal des nouveautés</a> contient les détails.</p>
+        </div>
+
+        <div class="faq-list" data-reveal>
+          <details class="faq-item" open>
+            <summary><span>01</span>NeoSuite est-il vraiment gratuit ?<i class="faq-ico"></i></summary>
+            <div class="faq-answer"><p>Oui. Pas de version « Pro », pas d’abonnement, pas de fonctionnalité cachée derrière un paiement. La suite est développée pour un usage personnel, sans monétisation.</p></div>
+          </details>
+          <details class="faq-item">
+            <summary><span>02</span>Faut-il créer un compte ?<i class="faq-ico"></i></summary>
+            <div class="faq-answer"><p>Non. NeoSuite ne demande ni adresse e-mail, ni identifiant, ni connexion. Les applications fonctionnent hors ligne, sauf pour les mises à jour de pilotes et les téléchargements winget.</p></div>
+          </details>
+          <details class="faq-item">
+            <summary><span>03</span>Où sont installées les applications ?<i class="faq-ico"></i></summary>
+            <div class="faq-answer"><p>Dans <code>C:\Program Files\Neo\&lt;App&gt;</code>, avec une entrée de désinstallation propre. NeoSuite peut aussi installer une seule application, sans le reste de la suite.</p></div>
+          </details>
+          <details class="faq-item">
+            <summary><span>04</span>NeoSuite remplace-t-il Windows Update ?<i class="faq-ico"></i></summary>
+            <div class="faq-answer"><p>Non, et il n’essaie pas. NeoDriver complète Windows Update pour les pilotes que Windows ignore ou classe mal. Les correctifs système restent gérés par Windows.</p></div>
+          </details>
+          <details class="faq-item">
+            <summary><span>05</span>Le site collecte-t-il des données ?<i class="faq-ico"></i></summary>
+            <div class="faq-answer"><p>Non. Pas de Google Analytics, pas de pixel, pas de cookie publicitaire. Cette page est un fichier statique : elle ne parle à aucun serveur pour fonctionner.</p></div>
+          </details>
+          <details class="faq-item">
+            <summary><span>06</span>Puis-je désinstaller une seule appli ?<i class="faq-ico"></i></summary>
+            <div class="faq-answer"><p>Oui. Chaque application est indépendante. NeoUninstaller supprime les restes, et NeoSuite propose la réinstallation à tout moment.</p></div>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== APPEL FINAL ===== -->
+    <section class="final">
+      <div class="final-glow" aria-hidden="true"></div>
+      <div class="container final-inner">
+        <p class="section-tag" data-reveal>Prêt quand vous l’êtes</p>
+        <h2 class="final-title" data-reveal>Reprenez la main.<br><span class="grad-text">Gardez le contrôle.</span></h2>
+        <p class="final-lede" data-reveal>NeoSuite 0.5.0 · Windows 10 &amp; 11 · x64 · sans compte</p>
+        <div class="final-cta" data-reveal>
+          <a class="btn btn-primary btn-xl magnetic" href="#telecharger" data-download>
+            <span>Installer NeoSuite</span>
+            <svg class="ico"><use href="#i-download"/></svg>
+          </a>
+          <button class="btn btn-ghost btn-xl magnetic" type="button" data-palette-open>
+            <svg class="ico"><use href="#i-command"/></svg>
+            <span>Ouvrir la palette</span>
+            <kbd>Ctrl K</kbd>
+          </button>
+        </div>
+        <p class="final-note" data-reveal>Téléchargement depuis GitHub : NeoSuite.exe + NeoSuite.pak, à garder dans le même dossier.</p>
+      </div>
+    </section>
+  </main>
+
+  <!-- ===== PIED ===== -->
+  <footer class="footer">
+    <div class="container footer-top">
+      <div class="footer-brand">
+        <svg class="mark" viewBox="0 0 40 40" aria-hidden="true">
+          <rect x="1.4" y="1.4" width="37.2" height="37.2" rx="11.5"/>
+          <path d="M13 27.5v-15L27 27.5v-15"/>
+        </svg>
+        <div>
+          <b>NeoSuite</b>
+          <span>Votre PC, sous contrôle.</span>
+        </div>
+      </div>
+
+      <div class="footer-cols">
+        <div class="footer-col">
+          <span class="footer-title">La suite</span>
+          <a href="#suite">Toutes les applications</a>
+          <a href="#boost">Le mode Boost</a>
+          <a href="#promesses">Nos promesses</a>
+          <a href="#installation">Installation</a>
+        </div>
+        <div class="footer-col">
+          <span class="footer-title">Ressources</span>
+          <a href="#" data-release-open>Nouveautés 0.5.0</a>
+          <a href="https://github.com/head69100/NeoSuite/blob/main/NeoSuite/CHANGELOG.md" target="_blank" rel="noopener">Journal des versions</a>
+          <a href="#faq">Questions fréquentes</a>
+          <button class="footer-btn" type="button" data-palette-open>Palette de commandes <kbd>Ctrl K</kbd></button>
+        </div>
+        <div class="footer-col">
+          <span class="footer-title">Le projet</span>
+          <a href="https://github.com/head69100/NeoSuite" target="_blank" rel="noopener">Code source sur GitHub</a>
+          <a href="https://github.com/head69100/NeoSuite/releases" target="_blank" rel="noopener">Toutes les versions</a>
+          <span class="footer-static">.NET 10 · WinUI 3</span>
+          <span class="footer-static">Windows 10 &amp; 11 · x64</span>
+          <span class="footer-static">Écrit en français</span>
+          <span class="footer-static">Sans télémétrie</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-word" aria-hidden="true">NEOSUITE</div>
+
+    <div class="container footer-bottom">
+      <p>© <span data-year>2026</span> NeoSuite. Conçu, écrit et testé en France.</p>
+      <p class="footer-version"><span class="live-dot"></span> Version 0.5.0 — <a href="#haut">retour en haut ↑</a></p>
+    </div>
+  </footer>
+
+  <!-- ===== PALETTE ===== -->
+  <div class="palette" id="palette" role="dialog" aria-modal="true" aria-label="Palette de commandes" hidden>
+    <div class="palette-backdrop" data-palette-close></div>
+    <div class="palette-box">
+      <div class="palette-search">
+        <svg class="ico"><use href="#i-search"/></svg>
+        <input id="paletteInput" type="text" placeholder="Aller à… ou taper une commande" autocomplete="off" spellcheck="false" aria-controls="paletteList" aria-autocomplete="list" role="combobox" aria-expanded="true">
+        <kbd>ESC</kbd>
+      </div>
+      <ul class="palette-list" id="paletteList" role="listbox" aria-label="Commandes"></ul>
+      <div class="palette-foot">
+        <span><kbd>↑</kbd><kbd>↓</kbd> naviguer</span>
+        <span><kbd>↵</kbd> ouvrir</span>
+        <span class="palette-brand">NEO // COMMAND</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== NOUVEAUTÉS ===== -->
+  <dialog class="release" id="releaseDialog" aria-labelledby="releaseTitle">
+    <div class="release-head">
+      <div>
+        <span class="section-tag">Journal</span>
+        <h2 id="releaseTitle">Nouveautés 0.5.0</h2>
+      </div>
+      <button class="release-close" type="button" data-release-close aria-label="Fermer">
+        <svg class="ico"><use href="#i-close"/></svg>
+      </button>
+    </div>
+    <div class="release-body">
+      <div class="release-entry">
+        <span class="release-ver">0.5.0 <em>· 11 novembre 2026</em></span>
+        <h3>Mises à jour automatiques depuis GitHub</h3>
+        <p>NeoSuite trouve tout seul les nouvelles versions publiées sur GitHub et les installe en un clic, téléchargement compris. Les applications aussi : une version plus récente s’affiche sur leur tuile.</p>
+      </div>
+      <div class="release-entry">
+        <span class="release-ver">0.4.3 <em>· 24 octobre 2026</em></span>
+        <h3>NeoTorrent arrive</h3>
+        <p>NeoTorrent 0.1.0 lit les fichiers .torrent et les liens magnet, télécharge et partage dans votre dossier Téléchargements. Progression, vitesses, temps restant et dossier personnalisable.</p>
+      </div>
+      <div class="release-entry">
+        <span class="release-ver">0.4.2 <em>· 18 octobre 2026</em></span>
+        <h3>NeoRar passe en 0.2.0</h3>
+        <p>Volumes découpés (.001…), vérification CRC partielle, extraction en arrière-plan avec notification, historique des opérations et sauvegardes planifiées via le planificateur de tâches Windows.</p>
+      </div>
+      <div class="release-entry">
+        <span class="release-ver">0.4.1 <em>· 18 octobre 2026</em></span>
+        <h3>Corrections ciblées</h3>
+        <p>La touche Impr. écran redevient normale quand NeoSoft est au premier plan, la barre de catégories défile horizontalement, et NeoMedia ouvre les vidéos plus légèrement.</p>
+      </div>
+      <a class="link-btn" href="https://github.com/head69100/NeoSuite/blob/main/NeoSuite/CHANGELOG.md" target="_blank" rel="noopener">
+        Lire le journal complet <svg class="ico"><use href="#i-up-right"/></svg>
+      </a>
+    </div>
+  </dialog>
+
+  <div class="toasts" id="toasts" aria-live="polite" aria-atomic="false"></div>
+
+  <script src="assets/js/core.js" defer></script>
+  <script src="assets/js/shader.js" defer></script>
+  <script src="assets/js/scroll.js" defer></script>
+  <script src="assets/js/demo.js" defer></script>
+</body>
+</html>

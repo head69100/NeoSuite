@@ -1,0 +1,113 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Page
+    x:Class="NeoDriver.Views.DashboardPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <ScrollViewer>
+        <StackPanel Padding="36,24,36,36" Spacing="16">
+            <TextBlock Text="Tableau de bord" Style="{StaticResource TitleTextBlockStyle}" Margin="0,0,0,8" />
+
+            <!-- Carte principale : état + analyse -->
+            <Border Style="{StaticResource CardStyle}" Padding="28">
+                <Grid ColumnSpacing="24">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <Image Source="ms-appx:///Assets/Logo.png" Width="88" Height="88" />
+                    <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="4">
+                        <TextBlock x:Name="StatusTitle" Text="Aucune analyse effectuée" Style="{StaticResource SubtitleTextBlockStyle}" />
+                        <TextBlock x:Name="StatusText" TextWrapping="Wrap"
+                                   Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                   Text="Lancez une analyse pour vérifier l'état des pilotes de votre PC." />
+                        <ProgressBar x:Name="ScanProgress" IsIndeterminate="True" Visibility="Collapsed" Margin="0,10,0,0" />
+                    </StackPanel>
+                    <Button x:Name="ScanButton" Grid.Column="2" VerticalAlignment="Center" Padding="20,10"
+                            AutomationProperties.Name="Analyser maintenant"
+                            Style="{StaticResource AccentButtonStyle}" Click="ScanButton_Click">
+                        <StackPanel Orientation="Horizontal" Spacing="8">
+                            <FontIcon Glyph="&#xE721;" FontSize="16" />
+                            <TextBlock Text="Analyser maintenant" />
+                        </StackPanel>
+                    </Button>
+                </Grid>
+            </Border>
+
+            <!-- Statistiques -->
+            <Grid ColumnSpacing="16">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <Border Style="{StaticResource CardStyle}">
+                    <StackPanel Spacing="6">
+                        <FontIcon Glyph="&#xE950;" HorizontalAlignment="Left" Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}" />
+                        <TextBlock Text="Pilotes installés" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                        <TextBlock x:Name="DriverCountText" Text="—" Style="{StaticResource TitleTextBlockStyle}" />
+                    </StackPanel>
+                </Border>
+
+                <Border Grid.Column="1" Style="{StaticResource CardStyle}">
+                    <StackPanel Spacing="6">
+                        <FontIcon Glyph="&#xE895;" HorizontalAlignment="Left" Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}" />
+                        <TextBlock Text="Mises à jour disponibles" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                        <TextBlock x:Name="UpdateCountText" Text="—" Style="{StaticResource TitleTextBlockStyle}" />
+                    </StackPanel>
+                </Border>
+
+                <Border Grid.Column="2" Style="{StaticResource CardStyle}">
+                    <StackPanel Spacing="6">
+                        <FontIcon Glyph="&#xE823;" HorizontalAlignment="Left" Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}" />
+                        <TextBlock Text="Dernière analyse" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                        <TextBlock x:Name="LastScanText" Text="Jamais" Style="{StaticResource TitleTextBlockStyle}" />
+                    </StackPanel>
+                </Border>
+            </Grid>
+
+            <!-- Santé des périphériques -->
+            <Border Style="{StaticResource CardStyle}">
+                <Grid ColumnSpacing="16">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <FontIcon x:Name="HealthIcon" Glyph="&#xE9D9;" FontSize="28" Foreground="{ThemeResource TextFillColorTertiaryBrush}" />
+                    <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                        <TextBlock Text="Santé des périphériques" Style="{StaticResource BodyStrongTextBlockStyle}" />
+                        <TextBlock x:Name="HealthText" Text="Vérification en cours…" TextWrapping="Wrap" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                    </StackPanel>
+                    <Button x:Name="HealthButton" Grid.Column="2" Content="Voir et corriger" Visibility="Collapsed" VerticalAlignment="Center" Click="HealthButton_Click" />
+                </Grid>
+            </Border>
+            <!-- Informations système -->
+            <TextBlock Text="Votre système" Style="{StaticResource BodyStrongTextBlockStyle}" Margin="0,12,0,0" />
+            <Border Style="{StaticResource CardStyle}">
+                <Grid RowSpacing="12" ColumnSpacing="24">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="180" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition /><RowDefinition /><RowDefinition /><RowDefinition /><RowDefinition />
+                    </Grid.RowDefinitions>
+
+                    <TextBlock Text="Système d'exploitation" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                    <TextBlock x:Name="OsText" Grid.Column="1" IsTextSelectionEnabled="True" />
+                    <TextBlock Grid.Row="1" Text="Build" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                    <TextBlock x:Name="BuildText" Grid.Row="1" Grid.Column="1" IsTextSelectionEnabled="True" />
+                    <TextBlock Grid.Row="2" Text="Nom du PC" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                    <TextBlock x:Name="PcNameText" Grid.Row="2" Grid.Column="1" IsTextSelectionEnabled="True" />
+                    <TextBlock Grid.Row="3" Text="Processeur" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                    <TextBlock x:Name="CpuText" Grid.Row="3" Grid.Column="1" IsTextSelectionEnabled="True" />
+                    <TextBlock Grid.Row="4" Text="Architecture" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                    <TextBlock x:Name="ArchText" Grid.Row="4" Grid.Column="1" IsTextSelectionEnabled="True" />
+                </Grid>
+            </Border>
+        </StackPanel>
+    </ScrollViewer>
+</Page>

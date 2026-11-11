@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Page
+    x:Class="NeoDriver.Views.ToolsPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <ScrollViewer>
+        <StackPanel Padding="36,24,36,36" Spacing="16">
+            <StackPanel Margin="0,0,0,8">
+                <TextBlock Text="Outils" Style="{StaticResource TitleTextBlockStyle}" />
+                <TextBlock Text="Sauvegarder, restaurer et nettoyer les pilotes de ce PC."
+                           Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="Wrap" />
+            </StackPanel>
+
+            <!-- Sauvegarde -->
+            <Border Style="{StaticResource CardStyle}">
+                <StackPanel Spacing="12">
+                    <Grid ColumnSpacing="16">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <FontIcon Glyph="&#xE74E;" FontSize="28" Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}" />
+                        <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                            <TextBlock Text="Sauvegarder les pilotes" Style="{StaticResource BodyStrongTextBlockStyle}" />
+                            <TextBlock TextWrapping="Wrap" Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                       Text="Copie tous les pilotes installés dans un dossier. Utile avant de réinstaller Windows : ils se restaurent ensuite en une fois." />
+                        </StackPanel>
+                        <Button x:Name="BackupButton" Grid.Column="2" Content="Sauvegarder…" VerticalAlignment="Center" Click="BackupButton_Click" />
+                    </Grid>
+                    <ProgressBar x:Name="BackupProgress" IsIndeterminate="True" Visibility="Collapsed" />
+                    <InfoBar x:Name="BackupBar" IsOpen="False">
+                        <InfoBar.ActionButton>
+                            <Button x:Name="OpenBackupButton" Content="Ouvrir le dossier" Visibility="Collapsed" Click="OpenBackupButton_Click" />
+                        </InfoBar.ActionButton>
+                    </InfoBar>
+                </StackPanel>
+            </Border>
+
+            <!-- Restauration -->
+            <Border Style="{StaticResource CardStyle}">
+                <Grid ColumnSpacing="16">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <FontIcon Glyph="&#xE777;" FontSize="28" Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}" />
+                    <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                        <TextBlock Text="Restaurer des pilotes" Style="{StaticResource BodyStrongTextBlockStyle}" />
+                        <TextBlock TextWrapping="Wrap" Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                   Text="Installe les pilotes d'un dossier de sauvegarde (page « Installer un pilote » › Depuis un dossier)." />
+                    </StackPanel>
+                    <Button Grid.Column="2" Content="Choisir le dossier…" VerticalAlignment="Center" Click="RestoreButton_Click" />
+                </Grid>
+            </Border>
+
+            <!-- Nettoyage -->
+            <Border Style="{StaticResource CardStyle}">
+                <StackPanel Spacing="12">
+                    <Grid ColumnSpacing="16">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <FontIcon Glyph="&#xE74D;" FontSize="28" Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}" />
+                        <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                            <TextBlock Text="Nettoyer les anciens pilotes" Style="{StaticResource BodyStrongTextBlockStyle}" />
+                            <TextBlock TextWrapping="Wrap" Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                       Text="Windows garde les anciennes versions de chaque pilote, ce qui peut occuper plusieurs Go. La version la plus récente et celles utilisées sont toujours conservées." />
+                        </StackPanel>
+                        <Button x:Name="AnalyzeButton" Grid.Column="2" Content="Analyser" VerticalAlignment="Center" Click="AnalyzeButton_Click" />
+                    </Grid>
+                    <ProgressBar x:Name="CleanProgress" IsIndeterminate="True" Visibility="Collapsed" />
+                    <TextBlock x:Name="CleanSummary" TextWrapping="Wrap" Visibility="Collapsed" Style="{StaticResource BodyStrongTextBlockStyle}" />
+                    <StackPanel x:Name="CleanList" Spacing="2" />
+                    <Button x:Name="DeleteButton" Content="Supprimer la sélection" Visibility="Collapsed" Style="{StaticResource AccentButtonStyle}" Click="DeleteButton_Click" />
+                    <InfoBar x:Name="CleanBar" IsOpen="False" />
+                </StackPanel>
+            </Border>
+
+            <!-- Rapport -->
+            <Border Style="{StaticResource CardStyle}">
+                <StackPanel Spacing="12">
+                    <Grid ColumnSpacing="16">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <FontIcon Glyph="&#xE9D9;" FontSize="28" Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}" />
+                        <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                            <TextBlock Text="Rapport du PC" Style="{StaticResource BodyStrongTextBlockStyle}" />
+                            <TextBlock TextWrapping="Wrap" Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                       Text="Matériel, BIOS, périphériques en erreur et version de chaque pilote dans un fichier texte, à joindre quand on vous demande de l'aide." />
+                        </StackPanel>
+                        <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
+                            <Button x:Name="CopyReportButton" Content="Copier" Click="CopyReportButton_Click" />
+                            <Button x:Name="ReportButton" Content="Enregistrer…" Style="{StaticResource AccentButtonStyle}" Click="ReportButton_Click" />
+                        </StackPanel>
+                    </Grid>
+                    <ProgressBar x:Name="ReportProgress" IsIndeterminate="True" Visibility="Collapsed" />
+                    <InfoBar x:Name="ReportBar" IsOpen="False">
+                        <InfoBar.ActionButton>
+                            <Button x:Name="ShowReportButton" Content="Afficher le fichier" Visibility="Collapsed" Click="ShowReportButton_Click" />
+                        </InfoBar.ActionButton>
+                    </InfoBar>
+                </StackPanel>
+            </Border>
+        </StackPanel>
+    </ScrollViewer>
+</Page>

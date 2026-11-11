@@ -1,0 +1,192 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Window
+    x:Class="NeoRar.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:models="using:NeoRar.Models"
+    Title="NeoRar">
+
+    <Window.SystemBackdrop>
+        <MicaBackdrop />
+    </Window.SystemBackdrop>
+
+    <Grid x:Name="RootGrid" AllowDrop="True" DragOver="RootGrid_DragOver" Drop="RootGrid_Drop" KeyDown="RootGrid_KeyDown">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="48" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <!-- Barre de titre -->
+        <Grid x:Name="AppTitleBar" Padding="16,0,0,0" ColumnSpacing="10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Image Source="ms-appx:///Assets/AppIcon.png" Width="20" Height="20" VerticalAlignment="Center" />
+            <TextBlock Grid.Column="1" VerticalAlignment="Center" Style="{StaticResource CaptionTextBlockStyle}">
+                <Run Text="Neo" FontWeight="SemiBold" Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}" /><Run Text="Rar" FontWeight="SemiBold" />
+            </TextBlock>
+            <TextBlock x:Name="TitleArchiveText" Grid.Column="2" VerticalAlignment="Center" Margin="6,0,0,0" TextTrimming="CharacterEllipsis"
+                       Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+        </Grid>
+
+        <!-- Barre d'outils -->
+        <CommandBar Grid.Row="1" DefaultLabelPosition="Right" HorizontalAlignment="Left" Margin="8,0,8,0" IsDynamicOverflowEnabled="True">
+            <AppBarButton x:Name="CompressButton" Label="Compresser" Click="CompressButton_Click" IsEnabled="False"
+                          ToolTipService.ToolTip="Créer une archive avec les fichiers et dossiers sélectionnés">
+                <AppBarButton.Icon><FontIcon Glyph="&#xE710;" /></AppBarButton.Icon>
+            </AppBarButton>
+            <AppBarButton x:Name="ExtractToButton" Label="Extraire vers…" Click="ExtractToButton_Click" IsEnabled="False"
+                          ToolTipService.ToolTip="Extraire dans le dossier de votre choix">
+                <AppBarButton.Icon><FontIcon Glyph="&#xE896;" /></AppBarButton.Icon>
+            </AppBarButton>
+            <AppBarButton x:Name="ExtractFolderButton" Label="Extraire à côté" Click="ExtractFolderButton_Click" IsEnabled="False"
+                          ToolTipService.ToolTip="Extraire dans un dossier du même nom que l'archive, à côté d'elle">
+                <AppBarButton.Icon><FontIcon Glyph="&#xE8B7;" /></AppBarButton.Icon>
+            </AppBarButton>
+            <AppBarSeparator />
+            <AppBarButton x:Name="AddButton" Label="Ajouter" Click="AddButton_Click" Visibility="Collapsed"
+                          ToolTipService.ToolTip="Ajouter des fichiers dans ce dossier de l'archive (7z et ZIP)">
+                <AppBarButton.Icon><FontIcon Glyph="&#xE8F4;" /></AppBarButton.Icon>
+            </AppBarButton>
+            <AppBarButton x:Name="DeleteButton" Label="Supprimer" Click="DeleteButton_Click" Visibility="Collapsed" IsEnabled="False"
+                          ToolTipService.ToolTip="Supprimer la sélection de l'archive (7z et ZIP)">
+                <AppBarButton.Icon><FontIcon Glyph="&#xE74D;" /></AppBarButton.Icon>
+            </AppBarButton>
+            <AppBarButton x:Name="TestButton" Label="Tester" Click="TestButton_Click" IsEnabled="False" ToolTipService.ToolTip="Vérifier que l'archive n'est pas abîmée">
+                <AppBarButton.Icon><FontIcon Glyph="&#xE9D5;" /></AppBarButton.Icon>
+            </AppBarButton>
+            <CommandBar.SecondaryCommands>
+                <AppBarButton Label="Ouvrir une archive…" Click="OpenButton_Click">
+                    <AppBarButton.Icon><FontIcon Glyph="&#xE8E5;" /></AppBarButton.Icon>
+                    <AppBarButton.KeyboardAccelerators>
+                        <KeyboardAccelerator Key="O" Modifiers="Control" />
+                    </AppBarButton.KeyboardAccelerators>
+                </AppBarButton>
+                <AppBarButton Label="Historique" Click="HistoryButton_Click"
+                              ToolTipService.ToolTip="Les opérations déjà effectuées (créations, extractions, vérifications…)">
+                    <AppBarButton.Icon><FontIcon Glyph="&#xE81C;" /></AppBarButton.Icon>
+                </AppBarButton>
+                <AppBarButton Label="Sauvegardes" Click="BackupsButton_Click"
+                              ToolTipService.ToolTip="Sauvegardes planifiées : archives créées automatiquement à l'heure choisie">
+                    <AppBarButton.Icon><FontIcon Glyph="&#xE718;" /></AppBarButton.Icon>
+                </AppBarButton>
+                <AppBarButton Label="Paramètres" Click="SettingsButton_Click">
+                    <AppBarButton.Icon><FontIcon Glyph="&#xE713;" /></AppBarButton.Icon>
+                </AppBarButton>
+            </CommandBar.SecondaryCommands>
+        </CommandBar>
+
+        <!-- Dossier du disque ou contenu de l'archive -->
+        <Grid Grid.Row="2" Padding="16,0,16,0" RowSpacing="6">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <Grid ColumnSpacing="8" Padding="4,0,4,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Button x:Name="UpButton" Click="UpButton_Click" ToolTipService.ToolTip="Dossier parent (Retour arrière, Alt+←)" Padding="8,6">
+                    <FontIcon Glyph="&#xE74A;" FontSize="14" />
+                    <Button.KeyboardAccelerators>
+                        <KeyboardAccelerator Key="Back" />
+                        <KeyboardAccelerator Key="Left" Modifiers="Menu" />
+                        <KeyboardAccelerator Key="Up" Modifiers="Menu" />
+                    </Button.KeyboardAccelerators>
+                </Button>
+                <BreadcrumbBar x:Name="PathBar" Grid.Column="1" VerticalAlignment="Center" ItemClicked="PathBar_ItemClicked" />
+            </Grid>
+
+            <InfoBar x:Name="MessageBar" Grid.Row="1" IsOpen="False" />
+
+            <Grid Grid.Row="2" RowSpacing="2">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <!-- En-têtes -->
+                <Grid Padding="16,0,16,4" ColumnSpacing="12">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="110" />
+                        <ColumnDefinition Width="200" />
+                        <ColumnDefinition Width="140" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Text="Nom" Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                    <TextBlock Grid.Column="1" Text="Taille" TextAlignment="Right" Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                    <TextBlock Grid.Column="2" Text="Type" Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                    <TextBlock Grid.Column="3" Text="Modifié le" Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                </Grid>
+
+                <Grid Grid.Row="1">
+                    <ListView x:Name="EntryList" SelectionMode="Extended" IsDoubleTapEnabled="True"
+                              DoubleTapped="EntryList_DoubleTapped" SelectionChanged="EntryList_SelectionChanged"
+                              ContextRequested="EntryList_ContextRequested">
+                        <ListView.ItemContainerStyle>
+                            <Style TargetType="ListViewItem">
+                                <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                                <Setter Property="MinHeight" Value="34" />
+                            </Style>
+                        </ListView.ItemContainerStyle>
+                        <ListView.ItemTemplate>
+                            <DataTemplate x:DataType="models:ArchiveEntry">
+                                <Grid ColumnSpacing="12" Background="Transparent">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="110" />
+                                        <ColumnDefinition Width="200" />
+                                        <ColumnDefinition Width="140" />
+                                    </Grid.ColumnDefinitions>
+                                    <!-- Seule la zone icône + nom fait glisser les fichiers ; le reste de la ligne sélectionne (lasso dans le vide) -->
+                                    <Grid HorizontalAlignment="Left" ColumnSpacing="10" Tag="DragHandle" Background="Transparent"
+                                          CanDrag="True" DragStarting="Handle_DragStarting" DropCompleted="Handle_DropCompleted">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="Auto" />
+                                        </Grid.ColumnDefinitions>
+                                        <Image Width="20" Height="20" Source="{x:Bind Icon, Mode=OneWay}" />
+                                        <TextBlock Grid.Column="1" Text="{x:Bind Name}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" />
+                                        <FontIcon Grid.Column="2" Glyph="{x:Bind LockGlyph}" FontSize="12" Foreground="{ThemeResource TextFillColorTertiaryBrush}" />
+                                    </Grid>
+                                    <TextBlock Grid.Column="1" Text="{x:Bind SizeText}" TextAlignment="Right" VerticalAlignment="Center" />
+                                    <TextBlock Grid.Column="2" Text="{x:Bind TypeText}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis"
+                                               Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                                    <TextBlock Grid.Column="3" Text="{x:Bind ModifiedText}" VerticalAlignment="Center" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                                </Grid>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+
+                    <!-- Rectangle de sélection (lasso) -->
+                    <Canvas x:Name="MarqueeCanvas" IsHitTestVisible="False">
+                        <Rectangle x:Name="Marquee" Visibility="Collapsed" StrokeThickness="1" RadiusX="2" RadiusY="2"
+                                   Stroke="{ThemeResource AccentFillColorDefaultBrush}">
+                            <Rectangle.Fill>
+                                <SolidColorBrush Color="{ThemeResource SystemAccentColor}" Opacity="0.18" />
+                            </Rectangle.Fill>
+                        </Rectangle>
+                    </Canvas>
+
+                    <TextBlock x:Name="EmptyText" Visibility="Collapsed" HorizontalAlignment="Center" VerticalAlignment="Center"
+                               Style="{StaticResource SecondaryTextStyle}" IsHitTestVisible="False" />
+                </Grid>
+            </Grid>
+        </Grid>
+
+        <ProgressRing x:Name="LoadingRing" Grid.Row="2" IsActive="False" Width="48" Height="48" />
+
+        <!-- Barre d'état -->
+        <Grid x:Name="StatusBar" Grid.Row="3" Padding="20,6" Background="{ThemeResource LayerFillColorDefaultBrush}">
+            <TextBlock x:Name="StatusText" Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+            <TextBlock x:Name="SelectionText" HorizontalAlignment="Right" Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+        </Grid>
+    </Grid>
+</Window>

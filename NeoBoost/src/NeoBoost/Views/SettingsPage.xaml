@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Page
+    x:Class="NeoBoost.Views.SettingsPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <ScrollViewer>
+        <StackPanel Padding="36,24,36,36" Spacing="6">
+            <TextBlock Text="Paramètres" Style="{StaticResource TitleTextBlockStyle}" Margin="0,0,0,16" />
+
+            <TextBlock Text="Apparence" Style="{StaticResource BodyStrongTextBlockStyle}" Margin="0,0,0,4" />
+            <Border Style="{StaticResource CardStyle}" Padding="16">
+                <Grid ColumnSpacing="16">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <FontIcon Glyph="&#xE790;" />
+                    <TextBlock Grid.Column="1" Text="Thème" VerticalAlignment="Center" />
+                    <ComboBox x:Name="ThemeCombo" Grid.Column="2" MinWidth="160" SelectionChanged="ThemeCombo_SelectionChanged">
+                        <ComboBoxItem Content="Système" />
+                        <ComboBoxItem Content="Clair" />
+                        <ComboBoxItem Content="Sombre" />
+                    </ComboBox>
+                </Grid>
+            </Border>
+
+            <TextBlock Text="À propos" Style="{StaticResource BodyStrongTextBlockStyle}" Margin="0,20,0,4" />
+            <Border Style="{StaticResource CardStyle}" Padding="16">
+                <Grid ColumnSpacing="16">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <Image Source="ms-appx:///Assets/AppIcon.png" Width="40" Height="40" />
+                    <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                        <TextBlock Text="NeoBoost" Style="{StaticResource BodyStrongTextBlockStyle}" />
+                        <TextBlock x:Name="VersionText" Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                    </StackPanel>
+                </Grid>
+            </Border>
+        </StackPanel>
+    </ScrollViewer>
+</Page>

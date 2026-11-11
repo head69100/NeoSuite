@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Application
+    x:Class="NeoTorrent.App"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <XamlControlsResources xmlns="using:Microsoft.UI.Xaml.Controls" />
+            </ResourceDictionary.MergedDictionaries>
+
+            <!-- Couleur d'accent de la suite Neo -->
+            <Color x:Key="SystemAccentColor">#1E9BFF</Color>
+            <Color x:Key="SystemAccentColorLight1">#47B0FF</Color>
+            <Color x:Key="SystemAccentColorLight2">#6CC6FF</Color>
+            <Color x:Key="SystemAccentColorLight3">#9EDCFF</Color>
+            <Color x:Key="SystemAccentColorDark1">#0A7BD6</Color>
+            <Color x:Key="SystemAccentColorDark2">#0062B0</Color>
+            <Color x:Key="SystemAccentColorDark3">#004A87</Color>
+
+            <Style x:Key="CardStyle" TargetType="Border">
+                <Setter Property="Background" Value="{ThemeResource CardBackgroundFillColorDefaultBrush}" />
+                <Setter Property="BorderBrush" Value="{ThemeResource CardStrokeColorDefaultBrush}" />
+                <Setter Property="BorderThickness" Value="1" />
+                <Setter Property="CornerRadius" Value="8" />
+                <Setter Property="Padding" Value="20" />
+            </Style>
+
+            <Style x:Key="SecondaryTextStyle" TargetType="TextBlock" BasedOn="{StaticResource BodyTextBlockStyle}">
+                <Setter Property="Foreground" Value="{ThemeResource TextFillColorSecondaryBrush}" />
+            </Style>
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>

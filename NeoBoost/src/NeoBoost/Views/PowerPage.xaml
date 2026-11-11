@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Page
+    x:Class="NeoBoost.Views.PowerPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <ScrollViewer>
+        <StackPanel Padding="36,24,36,36" Spacing="6">
+            <TextBlock Text="Alimentation" Style="{StaticResource TitleTextBlockStyle}" />
+            <TextBlock TextWrapping="Wrap" Style="{StaticResource SecondaryTextStyle}" Margin="0,0,0,16"
+                       Text="Le mode d'alimentation décide si le processeur privilégie la vitesse ou l'économie d'énergie. C'est l'un des rares réglages qui change vraiment les performances, surtout sur un portable." />
+
+            <InfoBar x:Name="ErrorBar" Severity="Error" IsOpen="False" />
+            <InfoBar x:Name="BoostInfo" Severity="Informational" IsOpen="False" IsClosable="False"
+                     Title="Mode Boost actif" Message="Le mode d'alimentation d'origine sera rétabli quand vous désactiverez le mode Boost (page Accueil)." />
+
+            <!-- Curseur de Windows (mode Utilisation normale) -->
+            <StackPanel x:Name="OverlaySection" Spacing="6">
+                <TextBlock Text="Mode d'alimentation" Style="{StaticResource BodyStrongTextBlockStyle}" Margin="0,0,0,4" />
+                <Border Style="{StaticResource CardStyle}" Padding="16">
+                    <Grid ColumnSpacing="16">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <FontIcon Glyph="&#xE945;" />
+                        <StackPanel Grid.Column="1">
+                            <TextBlock Text="Équilibre entre vitesse et autonomie" />
+                            <TextBlock x:Name="OverlayHint" TextWrapping="Wrap" Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                        </StackPanel>
+                        <ComboBox x:Name="OverlayCombo" Grid.Column="2" MinWidth="220" SelectionChanged="OverlayCombo_SelectionChanged">
+                            <ComboBoxItem Content="Meilleure efficacité énergétique" />
+                            <ComboBoxItem Content="Équilibré" />
+                            <ComboBoxItem Content="Meilleures performances" />
+                        </ComboBox>
+                    </Grid>
+                </Border>
+            </StackPanel>
+
+            <TextBlock Text="Modes de gestion de l'alimentation" Style="{StaticResource BodyStrongTextBlockStyle}" Margin="0,20,0,4" />
+            <StackPanel x:Name="SchemesPanel" Spacing="6" />
+
+            <Border x:Name="UltimateCard" Style="{StaticResource CardStyle}" Padding="16" Margin="0,6,0,0">
+                <Grid ColumnSpacing="16">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <FontIcon Glyph="&#xE710;" />
+                    <StackPanel Grid.Column="1">
+                        <TextBlock Text="Ajouter « Performances optimales »" />
+                        <TextBlock TextWrapping="Wrap" Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                   Text="Mode caché de Windows qui supprime les micro-économies d'énergie. Gain réel mais modeste, surtout sur les PC fixes ; déconseillé sur batterie. Droits administrateur requis." />
+                    </StackPanel>
+                    <Button x:Name="UltimateButton" Grid.Column="2" Content="Ajouter" VerticalAlignment="Center" Click="UltimateButton_Click" />
+                </Grid>
+            </Border>
+        </StackPanel>
+    </ScrollViewer>
+</Page>

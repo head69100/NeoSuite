@@ -1,0 +1,36 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    Installateur de NeoSuite. Publi� en un seul ex�cutable autonome (tools\build-setup.ps1), accompagn� de ses
+    fichiers � installer (NeoSuite + paquets des applis) dans NeoSuite.pak : voir InstallerPackage.cs.
+  -->
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <UseWindowsForms>true</UseWindowsForms>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <RootNamespace>NeoSetup</RootNamespace>
+    <AssemblyName>NeoSuite</AssemblyName>
+    <AssemblyTitle>NeoSuite</AssemblyTitle>
+    <Description>Installateur de NeoSuite</Description>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <ApplicationIcon>Assets\AppIcon.ico</ApplicationIcon>
+    <Platforms>x64</Platforms>
+    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+    <SelfContained>true</SelfContained>
+    <PublishSingleFile>true</PublishSingleFile>
+    <IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
+    <EnableCompressionInSingleFile>true</EnableCompressionInSingleFile>
+    <Version>0.5.0</Version>
+    <Product>NeoSuite</Product>
+    <Company>Neo</Company>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- Lecture du paquet d'installation, partag�e avec NeoSuite (qui cherche les mises � jour) -->
+    <Compile Include="..\..\Shared\Neo.Shared\InstallerPackage.cs" Link="InstallerPackage.cs" />
+    <EmbeddedResource Include="Assets\Logo.png" LogicalName="Logo.png" />
+  </ItemGroup>
+
+</Project>

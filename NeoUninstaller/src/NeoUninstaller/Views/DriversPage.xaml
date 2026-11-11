@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Page
+    x:Class="NeoUninstaller.Views.DriversPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:services="using:NeoUninstaller.Services">
+
+    <Grid Padding="36,24,36,24" RowSpacing="16">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <StackPanel>
+            <TextBlock Text="Pilotes orphelins" Style="{StaticResource TitleTextBlockStyle}" />
+            <TextBlock Text="Paquets de pilotes installés sur ce PC qu'aucun appareil n'utilise plus : ancien matériel débranché, version remplacée par une plus récente. Les pilotes des appareils branchés ne sont jamais touchés."
+                       Style="{StaticResource SecondaryTextStyle}" TextWrapping="Wrap" />
+        </StackPanel>
+
+        <InfoBar x:Name="ResultBar" Grid.Row="1" IsOpen="False" IsClosable="False" />
+
+        <Grid Grid.Row="2" ColumnSpacing="12">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <TextBlock x:Name="SummaryText" VerticalAlignment="Center" Style="{StaticResource BodyStrongTextBlockStyle}" />
+            <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="8">
+                <Button x:Name="CheckAllButton" Click="CheckAllButton_Click" AutomationProperties.Name="Tout cocher"
+                        IsEnabled="False">
+                    <StackPanel Orientation="Horizontal" Spacing="8">
+                        <FontIcon Glyph="&#xE73A;" FontSize="14" />
+                        <TextBlock Text="Tout cocher" />
+                    </StackPanel>
+                </Button>
+                <Button x:Name="UncheckAllButton" Click="UncheckAllButton_Click" AutomationProperties.Name="Tout décocher"
+                        IsEnabled="False">
+                    <StackPanel Orientation="Horizontal" Spacing="8">
+                        <FontIcon Glyph="&#xE739;" FontSize="14" />
+                        <TextBlock Text="Tout décocher" />
+                    </StackPanel>
+                </Button>
+                <Button x:Name="RefreshButton" Click="RefreshButton_Click" AutomationProperties.Name="Actualiser">
+                    <StackPanel Orientation="Horizontal" Spacing="8">
+                        <FontIcon Glyph="&#xE72C;" FontSize="14" />
+                        <TextBlock Text="Actualiser" />
+                    </StackPanel>
+                </Button>
+                <Button x:Name="DeleteButton" Style="{StaticResource AccentButtonStyle}" Click="DeleteButton_Click" IsEnabled="False"
+                        AutomationProperties.Name="Supprimer la sélection">
+                    <StackPanel Orientation="Horizontal" Spacing="8">
+                        <FontIcon Glyph="&#xE74D;" FontSize="14" />
+                        <TextBlock x:Name="DeleteLabel" Text="Supprimer la sélection" />
+                    </StackPanel>
+                </Button>
+            </StackPanel>
+        </Grid>
+
+        <ProgressRing x:Name="LoadingRing" Grid.Row="3" IsActive="False" Width="40" Height="40" VerticalAlignment="Center" />
+
+        <ListView x:Name="DriverList" Grid.Row="3" Padding="0,0,0,24" Visibility="Collapsed" SelectionMode="Multiple"
+                  SelectionChanged="DriverList_SelectionChanged">
+            <ListView.ItemContainerStyle>
+                <Style TargetType="ListViewItem">
+                    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                    <Setter Property="Padding" Value="12,6" />
+                    <Setter Property="Margin" Value="0,1" />
+                </Style>
+            </ListView.ItemContainerStyle>
+            <ListView.ItemTemplate>
+                <DataTemplate x:DataType="services:DriverPackage">
+                    <Grid ColumnSpacing="14">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <FontIcon Glyph="&#xE964;" FontSize="20" Foreground="{ThemeResource TextFillColorTertiaryBrush}" VerticalAlignment="Center" />
+                        <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                            <TextBlock Text="{x:Bind PublishedName}" Style="{StaticResource BodyStrongTextBlockStyle}" />
+                            <TextBlock Text="{x:Bind Description}" Style="{StaticResource CaptionTextBlockStyle}"
+                                       Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextTrimming="CharacterEllipsis" />
+                        </StackPanel>
+                        <TextBlock Grid.Column="2" Text="{x:Bind OriginalName}" VerticalAlignment="Center"
+                                   Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                   MaxWidth="260" TextTrimming="CharacterEllipsis" ToolTipService.ToolTip="{x:Bind OriginalName}" />
+                    </Grid>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+
+        <StackPanel x:Name="EmptyPanel" Grid.Row="3" Visibility="Collapsed" HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="6">
+            <FontIcon Glyph="&#xE73E;" FontSize="40" Foreground="{ThemeResource TextFillColorTertiaryBrush}" />
+            <TextBlock Text="Aucun pilote orphelin : tous les pilotes installés servent encore à un appareil." Style="{StaticResource SecondaryTextStyle}" />
+        </StackPanel>
+    </Grid>
+</Page>

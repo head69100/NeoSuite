@@ -1,0 +1,83 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Page
+    x:Class="NeoDriver.Views.VendorsPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <ScrollViewer>
+        <StackPanel Padding="36,24,36,36" Spacing="16">
+            <Grid ColumnSpacing="12">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <StackPanel>
+                    <TextBlock Text="Pilotes officiels" Style="{StaticResource TitleTextBlockStyle}" />
+                    <TextBlock TextWrapping="Wrap" Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                               Text="Le BIOS, le chipset et la carte graphique se mettent à jour depuis le site de leur fabricant : Windows Update les propose rarement, ou avec du retard." />
+                </StackPanel>
+                <ProgressRing x:Name="LoadingRing" Grid.Column="1" Width="28" Height="28" IsActive="True" VerticalAlignment="Center" />
+            </Grid>
+
+            <!-- Carte mère et BIOS -->
+            <Border Style="{StaticResource CardStyle}">
+                <StackPanel Spacing="14">
+                    <StackPanel Orientation="Horizontal" Spacing="12">
+                        <FontIcon Glyph="&#xE950;" FontSize="22" Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}" />
+                        <TextBlock Text="Carte mère et BIOS" Style="{StaticResource BodyStrongTextBlockStyle}" VerticalAlignment="Center" />
+                    </StackPanel>
+                    <StackPanel x:Name="BoardRows" Spacing="8" />
+                    <TextBlock x:Name="BiosAdviceText" TextWrapping="Wrap" Visibility="Collapsed" Foreground="{ThemeResource SystemFillColorCautionBrush}" />
+                    <StackPanel Orientation="Horizontal" Spacing="8">
+                        <Button x:Name="BiosButton" Content="Chercher le BIOS de ma carte mère" Style="{StaticResource AccentButtonStyle}" Click="BiosButton_Click" IsEnabled="False" />
+                        <Button x:Name="BoardDriversButton" Content="Pilotes de ma carte mère" Click="BoardDriversButton_Click" IsEnabled="False" />
+                    </StackPanel>
+                    <InfoBar IsOpen="True" IsClosable="False" Severity="Informational" Title="Avant de mettre à jour le BIOS"
+                             Message="Lisez les notes de la version : une mise à jour ne sert que si elle corrige un problème que vous avez ou ajoute un processeur compatible. Faites-la avec l'outil du fabricant (Q-Flash chez Gigabyte, EZ Flash chez ASUS, M-Flash chez MSI), sur secteur, sans éteindre le PC. Vérifiez que la révision de la carte correspond. NeoDriver ne flashe jamais le BIOS lui-même." />
+                </StackPanel>
+            </Border>
+
+            <!-- Chipset -->
+            <Border Style="{StaticResource CardStyle}">
+                <StackPanel Spacing="14">
+                    <StackPanel Orientation="Horizontal" Spacing="12">
+                        <FontIcon Glyph="&#xE9D9;" FontSize="22" Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}" />
+                        <TextBlock Text="Pilote de chipset" Style="{StaticResource BodyStrongTextBlockStyle}" VerticalAlignment="Center" />
+                    </StackPanel>
+                    <StackPanel x:Name="ChipsetRows" Spacing="8" />
+                    <TextBlock x:Name="ChipsetNote" TextWrapping="Wrap" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                    <StackPanel Orientation="Horizontal" Spacing="8">
+                        <Button x:Name="ChipsetButton" Content="Télécharger le pilote de chipset" Click="ChipsetButton_Click" IsEnabled="False" />
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+
+            <!-- Cartes graphiques -->
+            <Border Style="{StaticResource CardStyle}">
+                <StackPanel Spacing="14">
+                    <StackPanel Orientation="Horizontal" Spacing="12">
+                        <FontIcon Glyph="&#xE7F4;" FontSize="22" Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}" />
+                        <TextBlock Text="Carte graphique" Style="{StaticResource BodyStrongTextBlockStyle}" VerticalAlignment="Center" />
+                    </StackPanel>
+                    <StackPanel x:Name="GpuPanel" Spacing="14" />
+                </StackPanel>
+            </Border>
+
+            <!-- Pilotes anciens -->
+            <Border Style="{StaticResource CardStyle}">
+                <StackPanel Spacing="14">
+                    <StackPanel Orientation="Horizontal" Spacing="12">
+                        <FontIcon Glyph="&#xE823;" FontSize="22" Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}" />
+                        <TextBlock Text="Pilotes anciens" Style="{StaticResource BodyStrongTextBlockStyle}" VerticalAlignment="Center" />
+                    </StackPanel>
+                    <TextBlock x:Name="OldSummary" TextWrapping="Wrap" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                    <StackPanel Orientation="Horizontal" Spacing="8">
+                        <Button x:Name="OldRefreshButton" Content="Réanalyser" Click="OldRefreshButton_Click" />
+                        <Button x:Name="OldResetButton" Content="Réafficher les pilotes ignorés" Visibility="Collapsed" Click="OldResetButton_Click" />
+                    </StackPanel>
+                    <StackPanel x:Name="OldPanel" Spacing="6" />
+                </StackPanel>
+            </Border>
+        </StackPanel>
+    </ScrollViewer>
+</Page>

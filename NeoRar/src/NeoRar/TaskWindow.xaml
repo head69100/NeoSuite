@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Window
+    x:Class="NeoRar.TaskWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    Title="NeoRar">
+
+    <Window.SystemBackdrop>
+        <MicaBackdrop />
+    </Window.SystemBackdrop>
+
+    <Grid x:Name="RootGrid">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="40" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <Grid x:Name="AppTitleBar" Padding="16,0,0,0" ColumnSpacing="10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Image Source="ms-appx:///Assets/AppIcon.png" Width="18" Height="18" VerticalAlignment="Center" />
+            <TextBlock Grid.Column="1" VerticalAlignment="Center" Style="{StaticResource CaptionTextBlockStyle}">
+                <Run Text="Neo" FontWeight="SemiBold" Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}" /><Run Text="Rar" FontWeight="SemiBold" />
+            </TextBlock>
+        </Grid>
+
+        <Grid Grid.Row="1" Padding="24,8,24,24" RowSpacing="16">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <StackPanel Spacing="2">
+                <TextBlock x:Name="TitleText" Style="{StaticResource SubtitleTextBlockStyle}" TextTrimming="CharacterEllipsis" />
+                <TextBlock x:Name="SubtitleText" Style="{StaticResource SecondaryTextStyle}" TextTrimming="CharacterEllipsis" />
+            </StackPanel>
+
+            <!-- Création d'une archive -->
+            <Grid x:Name="FormPanel" Grid.Row="1" RowSpacing="14" Visibility="Collapsed">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <Grid ColumnSpacing="8">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <TextBox x:Name="ArchivePathBox" Header="Archive à créer" />
+                    <Button Grid.Column="1" Content="Parcourir…" VerticalAlignment="Bottom" Click="BrowseButton_Click" />
+                </Grid>
+
+                <Grid Grid.Row="1" ColumnSpacing="12">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <ComboBox x:Name="FormatCombo" Header="Format" HorizontalAlignment="Stretch" SelectionChanged="FormatCombo_SelectionChanged">
+                        <ComboBoxItem Content="7z · meilleure compression" />
+                        <ComboBoxItem Content="ZIP · s'ouvre partout" />
+                        <ComboBoxItem Content="TAR · sans compression" />
+                    </ComboBox>
+                    <ComboBox x:Name="LevelCombo" Grid.Column="1" Header="Compression" HorizontalAlignment="Stretch">
+                        <ComboBoxItem Content="Stockage (aucune)" />
+                        <ComboBoxItem Content="La plus rapide" />
+                        <ComboBoxItem Content="Rapide" />
+                        <ComboBoxItem Content="Normale" />
+                        <ComboBoxItem Content="Élevée" />
+                        <ComboBoxItem Content="Ultra (plus lente)" />
+                    </ComboBox>
+                </Grid>
+
+                <!-- Volumes : archive découpée en tomes de taille fixe (.001, .002…) -->
+                <Grid Grid.Row="2" ColumnSpacing="12">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <ComboBox x:Name="VolumeCombo" Header="Taille des volumes" HorizontalAlignment="Stretch" SelectedIndex="0">
+                        <ComboBoxItem Content="Aucune (fichier unique)" />
+                        <ComboBoxItem Content="100 Mo" />
+                        <ComboBoxItem Content="700 Mo" />
+                        <ComboBoxItem Content="4 700 Mo (DVD)" />
+                        <ComboBoxItem Content="25 000 Mo (BD)" />
+                    </ComboBox>
+                    <TextBlock x:Name="VolumeHint" Grid.Column="1" VerticalAlignment="Bottom" Margin="0,0,0,6" TextWrapping="Wrap"
+                               Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                               Text="Découpe l'archive en tomes .001, .002… — utile pour graver ou transporter de grosses archives (7z uniquement)." />
+                </Grid>
+
+                <StackPanel x:Name="PasswordSection" Grid.Row="3" Spacing="8">
+                    <CheckBox x:Name="ProtectCheck" Content="Protéger par un mot de passe (AES-256)" Checked="ProtectCheck_Changed" Unchecked="ProtectCheck_Changed" />
+                    <StackPanel x:Name="PasswordFields" Spacing="8" Visibility="Collapsed">
+                        <Grid ColumnSpacing="12">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <PasswordBox x:Name="PasswordBox1" PlaceholderText="Mot de passe" />
+                            <PasswordBox x:Name="PasswordBox2" Grid.Column="1" PlaceholderText="Confirmer le mot de passe" />
+                        </Grid>
+                        <CheckBox x:Name="EncryptNamesCheck" Content="Chiffrer aussi les noms des fichiers" IsChecked="True" />
+                    </StackPanel>
+                </StackPanel>
+
+                <TextBlock x:Name="FormError" Grid.Row="4" TextWrapping="Wrap" VerticalAlignment="Bottom" Visibility="Collapsed"
+                           Foreground="{ThemeResource SystemFillColorCriticalBrush}" />
+
+                <StackPanel Grid.Row="5" Orientation="Horizontal" Spacing="8" HorizontalAlignment="Right">
+                    <Button Content="Annuler" MinWidth="110" Click="CloseButton_Click" />
+                    <Button x:Name="CreateButton" Content="Créer l'archive" MinWidth="140" Style="{StaticResource AccentButtonStyle}" Click="CreateButton_Click" />
+                </StackPanel>
+            </Grid>
+
+            <!-- Mot de passe pour extraire -->
+            <Grid x:Name="PasswordPanel" Grid.Row="1" RowSpacing="12" Visibility="Collapsed">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <TextBlock x:Name="PasswordPrompt" TextWrapping="Wrap" />
+                <PasswordBox x:Name="ExtractPasswordBox" Grid.Row="1" PlaceholderText="Mot de passe" KeyDown="ExtractPasswordBox_KeyDown" />
+                <StackPanel Grid.Row="3" Orientation="Horizontal" Spacing="8" HorizontalAlignment="Right">
+                    <Button Content="Annuler" MinWidth="110" Click="CloseButton_Click" />
+                    <Button Content="Extraire" MinWidth="120" Style="{StaticResource AccentButtonStyle}" Click="PasswordOk_Click" />
+                </StackPanel>
+            </Grid>
+
+            <!-- Fichiers déjà présents -->
+            <Grid x:Name="ConflictPanel" Grid.Row="1" RowSpacing="12" Visibility="Collapsed">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <TextBlock x:Name="ConflictText" TextWrapping="Wrap" />
+                <StackPanel Grid.Row="2" Orientation="Horizontal" Spacing="8" HorizontalAlignment="Right">
+                    <Button Content="Annuler" Click="CloseButton_Click" />
+                    <Button Content="Garder les fichiers existants" Click="KeepExisting_Click" />
+                    <Button Content="Remplacer" MinWidth="110" Style="{StaticResource AccentButtonStyle}" Click="Overwrite_Click" />
+                </StackPanel>
+            </Grid>
+
+            <!-- Progression -->
+            <Grid x:Name="ProgressPanel" Grid.Row="1" RowSpacing="10" Visibility="Collapsed">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Grid>
+                    <TextBlock x:Name="ProgressLabel" Text="Préparation…" />
+                    <TextBlock x:Name="PercentText" HorizontalAlignment="Right" Style="{StaticResource BodyStrongTextBlockStyle}" />
+                </Grid>
+                <ProgressBar x:Name="ProgressBar" Grid.Row="1" Maximum="100" IsIndeterminate="True" />
+                <Grid Grid.Row="3">
+                    <Button x:Name="BackgroundButton" Content="Continuer en arrière-plan" HorizontalAlignment="Left" Click="BackgroundButton_Click"
+                            ToolTipService.ToolTip="Réduire NeoRar : l'opération continue et une notification annonce la fin" />
+                    <Button x:Name="CancelButton" Content="Annuler" MinWidth="110" HorizontalAlignment="Right" Click="CancelButton_Click" />
+                </Grid>
+            </Grid>
+
+            <!-- Résultat -->
+            <Grid x:Name="ResultPanel" Grid.Row="1" RowSpacing="12" Visibility="Collapsed">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <InfoBar x:Name="ResultBar" IsOpen="True" IsClosable="False" />
+                <StackPanel Grid.Row="2" Orientation="Horizontal" Spacing="8" HorizontalAlignment="Right">
+                    <Button x:Name="ShowInFolderButton" Content="Afficher dans l'Explorateur" Click="ShowInFolderButton_Click" />
+                    <Button Content="Fermer" MinWidth="110" Style="{StaticResource AccentButtonStyle}" Click="CloseButton_Click" />
+                </StackPanel>
+            </Grid>
+        </Grid>
+    </Grid>
+</Window>

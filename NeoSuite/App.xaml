@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Application
+    x:Class="NeoSuite.App"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    RequestedTheme="Dark">
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <XamlControlsResources xmlns="using:Microsoft.UI.Xaml.Controls" />
+            </ResourceDictionary.MergedDictionaries>
+
+            <!-- Couleur d'accent de la suite Neo (même bleu néon que NeoDriver) -->
+            <Color x:Key="SystemAccentColor">#1E9BFF</Color>
+            <Color x:Key="SystemAccentColorLight1">#47B0FF</Color>
+            <Color x:Key="SystemAccentColorLight2">#6CC6FF</Color>
+            <Color x:Key="SystemAccentColorLight3">#9EDCFF</Color>
+            <Color x:Key="SystemAccentColorDark1">#0A7BD6</Color>
+            <Color x:Key="SystemAccentColorDark2">#0062B0</Color>
+            <Color x:Key="SystemAccentColorDark3">#004A87</Color>
+
+            <SolidColorBrush x:Key="NeoAccentBrush" Color="#2FB4FF" />
+            <SolidColorBrush x:Key="GlassFillBrush" Color="#0FFFFFFF" />
+            <SolidColorBrush x:Key="GlassFillHoverBrush" Color="#1CFFFFFF" />
+            <SolidColorBrush x:Key="GlassFillPressedBrush" Color="#0AFFFFFF" />
+            <SolidColorBrush x:Key="GlassStrokeBrush" Color="#1FFFFFFF" />
+            <SolidColorBrush x:Key="GlassTextSecondaryBrush" Color="#B3FFFFFF" />
+            <SolidColorBrush x:Key="GlassTextTertiaryBrush" Color="#80FFFFFF" />
+
+            <!-- Tuile d'application : bouton vitré, plus clair au survol -->
+            <Style x:Key="AppTileButtonStyle" TargetType="Button">
+                <Setter Property="Background" Value="{StaticResource GlassFillBrush}" />
+                <Setter Property="BorderBrush" Value="{StaticResource GlassStrokeBrush}" />
+                <Setter Property="BorderThickness" Value="1" />
+                <Setter Property="CornerRadius" Value="12" />
+                <Setter Property="Padding" Value="14,12" />
+                <Setter Property="HorizontalAlignment" Value="Stretch" />
+                <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="Button">
+                            <Grid x:Name="Root" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}"
+                                  BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="{TemplateBinding CornerRadius}">
+                                <!-- Reflet glossy sur la moitié haute -->
+                                <Border CornerRadius="11,11,0,0" VerticalAlignment="Top" Height="28" IsHitTestVisible="False">
+                                    <Border.Background>
+                                        <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                                            <GradientStop Color="#14FFFFFF" Offset="0" />
+                                            <GradientStop Color="#00FFFFFF" Offset="1" />
+                                        </LinearGradientBrush>
+                                    </Border.Background>
+                                </Border>
+                                <ContentPresenter Padding="{TemplateBinding Padding}"
+                                                  HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                                  VerticalContentAlignment="Center" />
+                                <VisualStateManager.VisualStateGroups>
+                                    <VisualStateGroup x:Name="CommonStates">
+                                        <VisualState x:Name="Normal" />
+                                        <VisualState x:Name="PointerOver">
+                                            <VisualState.Setters>
+                                                <Setter Target="Root.Background" Value="{StaticResource GlassFillHoverBrush}" />
+                                                <Setter Target="Root.BorderBrush" Value="#3D2FB4FF" />
+                                            </VisualState.Setters>
+                                        </VisualState>
+                                        <VisualState x:Name="Pressed">
+                                            <VisualState.Setters>
+                                                <Setter Target="Root.Background" Value="{StaticResource GlassFillPressedBrush}" />
+                                            </VisualState.Setters>
+                                        </VisualState>
+                                        <VisualState x:Name="Disabled">
+                                            <VisualState.Setters>
+                                                <Setter Target="Root.Opacity" Value="0.5" />
+                                            </VisualState.Setters>
+                                        </VisualState>
+                                    </VisualStateGroup>
+                                </VisualStateManager.VisualStateGroups>
+                            </Grid>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>

@@ -1,0 +1,97 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Page
+    x:Class="NeoDriver.Views.InstallPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <ScrollViewer>
+        <StackPanel Padding="36,24,36,36" Spacing="16">
+            <StackPanel Margin="0,0,0,8">
+                <TextBlock Text="Installer un pilote" Style="{StaticResource TitleTextBlockStyle}" />
+                <TextBlock Text="Ajoutez un pilote depuis un fichier ou un dossier, ou recherchez-le pour un périphérique en erreur."
+                           Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="Wrap" />
+            </StackPanel>
+
+            <!-- Résultat de la dernière opération -->
+            <InfoBar x:Name="ResultBar" IsOpen="False">
+                <InfoBar.ActionButton>
+                    <Button x:Name="RestartButton" Content="Redémarrer maintenant" Visibility="Collapsed" Click="RestartButton_Click" />
+                </InfoBar.ActionButton>
+            </InfoBar>
+            <Expander x:Name="OutputExpander" Header="Détails techniques de Windows" Visibility="Collapsed"
+                      HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch">
+                <TextBlock x:Name="OutputText" IsTextSelectionEnabled="True" TextWrapping="Wrap" FontFamily="Consolas" FontSize="12" />
+            </Expander>
+            <StackPanel x:Name="BusyPanel" Visibility="Collapsed" Spacing="6">
+                <TextBlock x:Name="BusyText" Style="{StaticResource BodyStrongTextBlockStyle}" />
+                <ProgressBar IsIndeterminate="True" />
+            </StackPanel>
+
+            <!-- Depuis un fichier -->
+            <Border Style="{StaticResource CardStyle}">
+                <Grid ColumnSpacing="16">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <FontIcon Glyph="&#xE8E5;" FontSize="28" Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}" />
+                    <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                        <TextBlock Text="Depuis un fichier .inf" Style="{StaticResource BodyStrongTextBlockStyle}" />
+                        <TextBlock x:Name="SelectedFileText" Text="Sélectionnez le fichier .inf fourni par le fabricant."
+                                   Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextTrimming="CharacterEllipsis" />
+                    </StackPanel>
+                    <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
+                        <Button x:Name="BrowseFileButton" Content="Parcourir…" Click="BrowseButton_Click" />
+                        <Button x:Name="InstallFileButton" Content="Installer" Style="{StaticResource AccentButtonStyle}" IsEnabled="False" Click="InstallFileButton_Click" />
+                    </StackPanel>
+                </Grid>
+            </Border>
+
+            <!-- Depuis un dossier -->
+            <Border Style="{StaticResource CardStyle}">
+                <Grid ColumnSpacing="16">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <FontIcon Glyph="&#xE8B7;" FontSize="28" Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}" />
+                    <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                        <TextBlock Text="Depuis un dossier" Style="{StaticResource BodyStrongTextBlockStyle}" />
+                        <TextBlock x:Name="SelectedFolderText" Text="Installe tous les pilotes trouvés dans un dossier et ses sous-dossiers (par exemple une sauvegarde faite avec NeoDriver)."
+                                   Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="Wrap" />
+                    </StackPanel>
+                    <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
+                        <Button x:Name="BrowseFolderButton" Content="Choisir un dossier…" Click="BrowseFolderButton_Click" />
+                        <Button x:Name="InstallFolderButton" Content="Installer" Style="{StaticResource AccentButtonStyle}" IsEnabled="False" Click="InstallFolderButton_Click" />
+                    </StackPanel>
+                </Grid>
+            </Border>
+
+            <!-- Périphériques en erreur -->
+            <Border Style="{StaticResource CardStyle}">
+                <StackPanel Spacing="16">
+                    <Grid ColumnSpacing="16">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <FontIcon Glyph="&#xE7BA;" FontSize="28" Foreground="{ThemeResource SystemFillColorCautionBrush}" />
+                        <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                            <TextBlock Text="Périphériques en erreur ou sans pilote" Style="{StaticResource BodyStrongTextBlockStyle}" />
+                            <TextBlock x:Name="DevicesSummary" TextWrapping="Wrap" Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                       Text="Détecte les périphériques que Windows signale en erreur, explique pourquoi, et cherche un pilote compatible." />
+                        </StackPanel>
+                        <Button x:Name="DetectButton" Grid.Column="2" Content="Détecter" VerticalAlignment="Center" Click="DetectButton_Click" />
+                    </Grid>
+                    <StackPanel x:Name="DevicesPanel" Spacing="8" />
+                </StackPanel>
+            </Border>
+
+            <InfoBar IsOpen="True" Severity="Warning" IsClosable="False" Title="Conseil"
+                     Message="Un point de restauration système est créé avant chaque installation (réglable dans Paramètres) pour pouvoir revenir en arrière. Windows refuse les pilotes non signés : n'installez que ceux de votre fabricant." />
+        </StackPanel>
+    </ScrollViewer>
+</Page>

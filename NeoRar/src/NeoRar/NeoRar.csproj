@@ -1,0 +1,52 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net10.0-windows10.0.22621.0</TargetFramework>
+    <TargetPlatformMinVersion>10.0.19041.0</TargetPlatformMinVersion>
+    <RootNamespace>NeoRar</RootNamespace>
+    <AssemblyName>NeoRar</AssemblyName>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <ApplicationIcon>Assets\AppIcon.ico</ApplicationIcon>
+    <Platforms>x64</Platforms>
+    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+    <UseWinUI>true</UseWinUI>
+    <WindowsPackageType>None</WindowsPackageType>
+    <WindowsAppSDKSelfContained>true</WindowsAppSDKSelfContained>
+    <!-- Nécessaire pour que dotnet publish copie NeoRar.pri (ressources XAML) en mode non empaqueté -->
+    <EnableMsixTooling>true</EnableMsixTooling>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Version>0.2.1</Version>
+    <Product>NeoRar</Product>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="Assets\**" CopyToOutputDirectory="PreserveNewest" />
+    <!-- Lu par NeoSuite à la désinstallation : arguments à passer à NeoRar pour qu'il retire son intégration à l'Explorateur -->
+    <Content Include="neo-uninstall-hook" CopyToOutputDirectory="PreserveNewest" />
+    <!-- Idem après l'installation : NeoRar active son intégration à l'Explorateur sans attendre d'être ouvert -->
+    <Content Include="neo-install-hook" CopyToOutputDirectory="PreserveNewest" />
+    <!-- Moteur 7-Zip : copié ici plutôt que par 7z.Libs, dont la cible de publication échoue en .NET 10 -->
+    <Content Include="$(Pkg7z_Libs)\bin\x64\7z.dll" Link="x64\7z.dll" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="$(Pkg7z_Libs)\bin\License.txt" Link="x64\7-Zip-License.txt" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <NG7zLibsCopyToOutput>false</NG7zLibsCopyToOutput>
+    <NG7zLibsResolvePublish>false</NG7zLibsResolvePublish>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="7z.Libs" Version="26.4.0" GeneratePathProperty="true" />
+    <PackageReference Include="Microsoft.WindowsAppSDK" Version="2.5.1" />
+    <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.28000.2705" />
+    <PackageReference Include="Squid-Box.SevenZipSharp" Version="1.6.2.24" />
+    <PackageReference Include="System.Drawing.Common" Version="10.0.13" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Shared\Neo.Shared\Neo.Shared.csproj" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,314 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Window
+    x:Class="NeoSuite.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:models="using:NeoSuite.Models"
+    Title="NeoSuite">
+
+    <Grid x:Name="RootGrid" KeyDown="RootGrid_KeyDown" PreviewKeyDown="RootGrid_PreviewKeyDown"
+          PointerEntered="RootGrid_PointerEntered" PointerExited="RootGrid_PointerExited">
+        <!-- Effet glossy : halo bleu en haut + reflet blanc -->
+        <Grid.Background>
+            <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                <GradientStop Color="#331E9BFF" Offset="0" />
+                <GradientStop Color="#0A1E9BFF" Offset="0.35" />
+                <GradientStop Color="#00000000" Offset="1" />
+            </LinearGradientBrush>
+        </Grid.Background>
+
+        <Border VerticalAlignment="Top" Height="140" IsHitTestVisible="False">
+            <Border.Background>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                    <GradientStop Color="#1AFFFFFF" Offset="0" />
+                    <GradientStop Color="#00FFFFFF" Offset="1" />
+                </LinearGradientBrush>
+            </Border.Background>
+        </Border>
+
+        <Grid Padding="20,18,20,16" RowSpacing="18">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <!-- En-tête -->
+            <Grid ColumnSpacing="12">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <Image Source="ms-appx:///Assets/AppIcon.png" Width="38" Height="38" />
+                <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                    <TextBlock FontSize="20" FontWeight="SemiBold">
+                        <Run Text="Neo" Foreground="{StaticResource NeoAccentBrush}" /><Run Text="Suite" />
+                    </TextBlock>
+                    <TextBlock x:Name="GreetingText" FontSize="12" Foreground="{StaticResource GlassTextSecondaryBrush}" />
+                </StackPanel>
+                <Button x:Name="SettingsButton" Grid.Column="2" Width="32" Height="32" Padding="0" CornerRadius="16" VerticalAlignment="Top"
+                        Background="Transparent" BorderThickness="0" Click="SettingsButton_Click"
+                        AutomationProperties.Name="Paramètres" ToolTipService.ToolTip="Paramètres">
+                    <FontIcon x:Name="SettingsIcon" Glyph="&#xE713;" FontSize="14" />
+                </Button>
+                <Button Grid.Column="3" Width="32" Height="32" Padding="0" CornerRadius="16" VerticalAlignment="Top"
+                        Background="Transparent" BorderThickness="0" Click="CloseButton_Click"
+                        AutomationProperties.Name="Fermer NeoSuite" ToolTipService.ToolTip="Fermer (Échap)">
+                    <FontIcon Glyph="&#xE8BB;" FontSize="12" />
+                </Button>
+            </Grid>
+
+            <!-- Heure et date -->
+            <StackPanel x:Name="ClockPanel" Grid.Row="1" Spacing="0">
+                <TextBlock x:Name="ClockText" FontSize="44" FontWeight="Light" CharacterSpacing="-20" />
+                <TextBlock x:Name="DateText" FontSize="14" Foreground="{StaticResource GlassTextSecondaryBrush}" />
+            </StackPanel>
+
+            <!-- Recherche -->
+            <TextBox x:Name="SearchBox" Grid.Row="2" PlaceholderText="Rechercher une application" CornerRadius="10"
+                     TextChanged="SearchBox_TextChanged" AutomationProperties.Name="Rechercher une application">
+                <TextBox.Resources>
+                    <SolidColorBrush x:Key="TextControlBackground" Color="#14FFFFFF" />
+                    <SolidColorBrush x:Key="TextControlBackgroundPointerOver" Color="#1FFFFFFF" />
+                    <SolidColorBrush x:Key="TextControlBackgroundFocused" Color="#26000000" />
+                    <SolidColorBrush x:Key="TextControlBorderBrush" Color="#1FFFFFFF" />
+                    <SolidColorBrush x:Key="TextControlBorderBrushPointerOver" Color="#33FFFFFF" />
+                </TextBox.Resources>
+            </TextBox>
+
+            <!-- Bibliothèque -->
+            <Grid x:Name="LibraryPanel" Grid.Row="3" RowSpacing="10">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <Grid>
+                    <TextBlock Text="MES APPLICATIONS" FontSize="11" FontWeight="SemiBold" CharacterSpacing="80"
+                               Foreground="{StaticResource GlassTextTertiaryBrush}" />
+                    <TextBlock x:Name="CountText" HorizontalAlignment="Right" FontSize="11"
+                               Foreground="{StaticResource GlassTextTertiaryBrush}" />
+                </Grid>
+
+                <!-- Une mise à jour de NeoSuite lui-même a été trouvée sur cet ordinateur -->
+                <Border x:Name="UpdateBanner" Grid.Row="1" Visibility="Collapsed" Padding="12,10" CornerRadius="10" BorderThickness="1"
+                        BorderBrush="#661E9BFF" Background="#1A1E9BFF">
+                    <Grid ColumnSpacing="10">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <FontIcon Glyph="&#xE895;" FontSize="16" VerticalAlignment="Top" Margin="0,2,0,0" Foreground="{StaticResource NeoAccentBrush}" />
+                        <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="1">
+                            <TextBlock x:Name="UpdateTitle" FontSize="13" FontWeight="SemiBold" TextWrapping="Wrap" />
+                            <TextBlock x:Name="UpdateDetail" FontSize="11" TextWrapping="Wrap" Foreground="{StaticResource GlassTextSecondaryBrush}" />
+                        </StackPanel>
+                        <Button Grid.Column="2" Content="Mettre à jour" Click="UpdateButton_Click" VerticalAlignment="Center" CornerRadius="8"
+                                Background="{StaticResource NeoAccentBrush}" Foreground="White" BorderThickness="0" Padding="12,6"
+                                AutomationProperties.Name="Mettre à jour NeoSuite" />
+                    </Grid>
+                </Border>
+
+                <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto">
+                    <StackPanel Spacing="8">
+                        <ItemsRepeater x:Name="AppsRepeater">
+                            <ItemsRepeater.Layout>
+                                <StackLayout Spacing="8" />
+                            </ItemsRepeater.Layout>
+                            <ItemsRepeater.ItemTemplate>
+                                <DataTemplate x:DataType="models:NeoApp">
+                                    <!-- Tag = l'appli elle-même : ItemsRepeater ne renseigne pas DataContext avec x:Bind -->
+                                    <Button Style="{StaticResource AppTileButtonStyle}" Click="AppTile_Click" ContextRequested="AppTile_ContextRequested"
+                                            Tag="{x:Bind}"
+                                            IsEnabled="{x:Bind IsEnabled, Mode=OneWay}" AutomationProperties.Name="{x:Bind Name}"
+                                            ToolTipService.ToolTip="Clic droit pour plus d'options">
+                                        <Grid ColumnSpacing="14" RowSpacing="8">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto" />
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="Auto" />
+                                            </Grid.ColumnDefinitions>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="Auto" />
+                                                <RowDefinition Height="Auto" />
+                                            </Grid.RowDefinitions>
+                                            <Image Source="{x:Bind IconUri}" Width="44" Height="44" />
+                                            <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="1">
+                                                <TextBlock FontSize="15" FontWeight="SemiBold">
+                                                    <Run Text="{x:Bind NamePrefix}" Foreground="{StaticResource NeoAccentBrush}" /><Run Text="{x:Bind NameSuffix}" />
+                                                </TextBlock>
+                                                <TextBlock Text="{x:Bind Description}" FontSize="12" TextWrapping="Wrap" MaxLines="2" TextTrimming="CharacterEllipsis"
+                                                           Foreground="{StaticResource GlassTextSecondaryBrush}" />
+                                            </StackPanel>
+                                            <Border Grid.Column="2" VerticalAlignment="Center" Padding="8,2" CornerRadius="8"
+                                                    Background="#14FFFFFF" Visibility="{x:Bind ShowChip, Mode=OneWay}">
+                                                <TextBlock Text="{x:Bind StatusText, Mode=OneWay}" FontSize="11" Foreground="{StaticResource GlassTextSecondaryBrush}" />
+                                            </Border>
+
+                                            <!-- Progression du téléchargement / de l'installation -->
+                                            <StackPanel Grid.Row="1" Grid.ColumnSpan="3" Spacing="4" Visibility="{x:Bind IsBusy, Mode=OneWay}">
+                                                <TextBlock Text="{x:Bind StatusText, Mode=OneWay}" FontSize="11" Foreground="{StaticResource GlassTextSecondaryBrush}" />
+                                                <ProgressBar Value="{x:Bind Progress, Mode=OneWay}" IsIndeterminate="{x:Bind IsIndeterminate, Mode=OneWay}"
+                                                             Maximum="100" />
+                                            </StackPanel>
+                                        </Grid>
+                                    </Button>
+                                </DataTemplate>
+                            </ItemsRepeater.ItemTemplate>
+                        </ItemsRepeater>
+
+                        <TextBlock x:Name="NoResultText" Text="Aucune application ne correspond." Visibility="Collapsed"
+                                   Margin="4,8" Foreground="{StaticResource GlassTextTertiaryBrush}" />
+
+                        <!-- Emplacement pour les prochaines applis -->
+                        <Border x:Name="ComingSoonCard" Padding="14,16" CornerRadius="12" BorderThickness="1"
+                                BorderBrush="#26FFFFFF" Background="#06FFFFFF">
+                            <Grid ColumnSpacing="14">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <Border Width="44" Height="44" CornerRadius="10" BorderThickness="1" BorderBrush="#26FFFFFF">
+                                    <FontIcon Glyph="&#xE710;" FontSize="16" Foreground="{StaticResource GlassTextTertiaryBrush}" />
+                                </Border>
+                                <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                    <TextBlock Text="Bientôt d'autres applis" FontSize="14" Foreground="{StaticResource GlassTextSecondaryBrush}" />
+                                    <TextBlock Text="Les prochaines applications Neo apparaîtront ici." FontSize="12" TextWrapping="Wrap"
+                                               Foreground="{StaticResource GlassTextTertiaryBrush}" />
+                                </StackPanel>
+                            </Grid>
+                        </Border>
+                    </StackPanel>
+                </ScrollViewer>
+            </Grid>
+
+            <!-- Paramètres (remplace la bibliothèque) -->
+            <ScrollViewer x:Name="SettingsPanel" Grid.Row="1" Grid.RowSpan="3" Visibility="Collapsed">
+                <StackPanel Spacing="10">
+                    <TextBlock Text="PARAMÈTRES" FontSize="11" FontWeight="SemiBold" CharacterSpacing="80"
+                               Foreground="{StaticResource GlassTextTertiaryBrush}" Margin="0,0,0,2" />
+
+                    <!-- Raccourci d'ouverture -->
+                    <Border Padding="16" CornerRadius="12" BorderThickness="1" BorderBrush="{StaticResource GlassStrokeBrush}"
+                            Background="{StaticResource GlassFillBrush}">
+                        <StackPanel Spacing="10">
+                            <StackPanel>
+                                <TextBlock Text="Raccourci d'ouverture" FontSize="14" />
+                                <TextBlock Text="Ouvre ou ferme NeoSuite depuis n'importe où." FontSize="12" TextWrapping="Wrap"
+                                           Foreground="{StaticResource GlassTextSecondaryBrush}" />
+                            </StackPanel>
+                            <Grid ColumnSpacing="8">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <Border x:Name="HotKeyBox" Padding="12,8" CornerRadius="8" BorderThickness="1"
+                                        BorderBrush="{StaticResource GlassStrokeBrush}" Background="#26000000">
+                                    <TextBlock x:Name="HotKeyText" FontFamily="Segoe UI Variable Display" FontSize="14" FontWeight="SemiBold" />
+                                </Border>
+                                <Button x:Name="ChangeHotKeyButton" Grid.Column="1" Content="Modifier" Click="ChangeHotKeyButton_Click"
+                                        AutomationProperties.Name="Modifier le raccourci" />
+                            </Grid>
+                            <TextBlock x:Name="HotKeyStatusText" FontSize="12" TextWrapping="Wrap" Visibility="Collapsed" />
+                            <HyperlinkButton x:Name="ResetHotKeyButton" Content="Rétablir Ctrl + Alt + N" Padding="0" FontSize="12"
+                                             Click="ResetHotKeyButton_Click" />
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Fermeture automatique -->
+                    <Border Padding="16" CornerRadius="12" BorderThickness="1" BorderBrush="{StaticResource GlassStrokeBrush}"
+                            Background="{StaticResource GlassFillBrush}">
+                        <StackPanel Spacing="10">
+                            <StackPanel>
+                                <TextBlock Text="Fermeture automatique" FontSize="14" />
+                                <TextBlock Text="Range le panneau quand la souris n'est plus dessus." FontSize="12" TextWrapping="Wrap"
+                                           Foreground="{StaticResource GlassTextSecondaryBrush}" />
+                            </StackPanel>
+                            <ComboBox x:Name="AutoCloseCombo" HorizontalAlignment="Stretch" SelectionChanged="AutoCloseCombo_SelectionChanged"
+                                      AutomationProperties.Name="Fermeture automatique">
+                                <ComboBoxItem Content="Jamais" Tag="0" />
+                                <ComboBoxItem Content="Après 3 secondes" Tag="3" />
+                                <ComboBoxItem Content="Après 5 secondes" Tag="5" />
+                                <ComboBoxItem Content="Après 10 secondes" Tag="10" />
+                                <ComboBoxItem Content="Après 30 secondes" Tag="30" />
+                            </ComboBox>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Démarrage -->
+                    <Border Padding="16" CornerRadius="12" BorderThickness="1" BorderBrush="{StaticResource GlassStrokeBrush}"
+                            Background="{StaticResource GlassFillBrush}">
+                        <Grid ColumnSpacing="12">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <StackPanel>
+                                <TextBlock Text="Démarrer avec Windows" FontSize="14" />
+                                <TextBlock Text="NeoSuite attend discrètement dans la barre système pour que le raccourci marche tout de suite."
+                                           FontSize="12" TextWrapping="Wrap" Foreground="{StaticResource GlassTextSecondaryBrush}" />
+                            </StackPanel>
+                            <ToggleSwitch x:Name="StartupToggle" Grid.Column="1" OnContent="" OffContent="" MinWidth="0"
+                                          VerticalAlignment="Center" Toggled="StartupToggle_Toggled"
+                                          AutomationProperties.Name="Démarrer avec Windows" />
+                        </Grid>
+                    </Border>
+
+                    <!-- Mises à jour de NeoSuite -->
+                    <Border Padding="16" CornerRadius="12" BorderThickness="1" BorderBrush="{StaticResource GlassStrokeBrush}"
+                            Background="{StaticResource GlassFillBrush}">
+                        <StackPanel Spacing="10">
+                            <StackPanel>
+                                <TextBlock Text="Mises à jour" FontSize="14" />
+                                <TextBlock x:Name="UpdateVersionText" FontSize="12" TextWrapping="Wrap"
+                                           Foreground="{StaticResource GlassTextSecondaryBrush}" />
+                            </StackPanel>
+                            <Button x:Name="CheckUpdateButton" HorizontalAlignment="Stretch" Content="Rechercher une mise à jour"
+                                    Click="CheckUpdate_Click" AutomationProperties.Name="Rechercher une mise à jour de NeoSuite" />
+                            <TextBlock x:Name="UpdateStatusText" FontSize="12" TextWrapping="Wrap" Visibility="Collapsed"
+                                       Foreground="{StaticResource GlassTextSecondaryBrush}" />
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Droits administrateur des applis -->
+                    <Border Padding="16" CornerRadius="12" BorderThickness="1" BorderBrush="{StaticResource GlassStrokeBrush}"
+                            Background="{StaticResource GlassFillBrush}">
+                        <StackPanel Spacing="10">
+                            <StackPanel>
+                                <TextBlock Text="Droits administrateur" FontSize="14" />
+                                <TextBlock Text="Les applis activées démarrent en administrateur sans redemander de confirmation. Windows demande votre accord une seule fois, au moment de l'activer."
+                                           FontSize="12" TextWrapping="Wrap" Foreground="{StaticResource GlassTextSecondaryBrush}" />
+                            </StackPanel>
+                            <StackPanel x:Name="AdminAppsPanel" Spacing="4" />
+                            <TextBlock x:Name="AdminStatusText" FontSize="12" TextWrapping="Wrap" Visibility="Collapsed" />
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Quitter -->
+                    <Button HorizontalAlignment="Stretch" Padding="12,10" CornerRadius="12" Click="QuitButton_Click"
+                            Background="{StaticResource GlassFillBrush}" BorderBrush="{StaticResource GlassStrokeBrush}"
+                            AutomationProperties.Name="Quitter NeoSuite">
+                        <StackPanel Orientation="Horizontal" Spacing="10">
+                            <FontIcon Glyph="&#xE7E8;" FontSize="14" />
+                            <TextBlock Text="Quitter NeoSuite" />
+                        </StackPanel>
+                    </Button>
+                    <TextBlock Text="Quitter retire NeoSuite de la barre système : le raccourci ne fonctionnera plus jusqu'au prochain lancement."
+                               FontSize="11" TextWrapping="Wrap" Foreground="{StaticResource GlassTextTertiaryBrush}" />
+                </StackPanel>
+            </ScrollViewer>
+
+            <!-- Pied -->
+            <Grid Grid.Row="4">
+                <TextBlock x:Name="VersionText" FontSize="11" VerticalAlignment="Center" Foreground="{StaticResource GlassTextTertiaryBrush}" />
+                <TextBlock x:Name="FooterHintText" HorizontalAlignment="Right" FontSize="11" VerticalAlignment="Center"
+                           Foreground="{StaticResource GlassTextTertiaryBrush}" />
+            </Grid>
+        </Grid>
+    </Grid>
+</Window>

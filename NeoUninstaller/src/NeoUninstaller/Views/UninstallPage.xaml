@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Page
+    x:Class="NeoUninstaller.Views.UninstallPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:models="using:NeoUninstaller.Models">
+
+    <Grid Padding="36,24,36,24" RowSpacing="16">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <!-- Programme concerné -->
+        <Grid ColumnSpacing="16">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <Grid Width="48" Height="48">
+                <FontIcon x:Name="FallbackIcon" Glyph="&#xE71D;" FontSize="30" Foreground="{ThemeResource TextFillColorTertiaryBrush}" />
+                <Image x:Name="ProgramIcon" Width="48" Height="48" />
+            </Grid>
+            <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                <TextBlock x:Name="ProgramName" Style="{StaticResource SubtitleTextBlockStyle}" TextTrimming="CharacterEllipsis" />
+                <TextBlock x:Name="ProgramDetails" Style="{StaticResource SecondaryTextStyle}" TextTrimming="CharacterEllipsis" />
+            </StackPanel>
+            <Button x:Name="BackButton" Grid.Column="2" VerticalAlignment="Center" Click="BackButton_Click" AutomationProperties.Name="Retour à la liste">
+                <StackPanel Orientation="Horizontal" Spacing="8">
+                    <FontIcon Glyph="&#xE72B;" FontSize="14" />
+                    <TextBlock Text="Retour à la liste" />
+                </StackPanel>
+            </Button>
+        </Grid>
+
+        <!-- Étapes -->
+        <Grid x:Name="StepsGrid" Grid.Row="1" ColumnSpacing="8">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+        </Grid>
+
+        <!-- État de l'étape en cours -->
+        <Border Grid.Row="2" Style="{StaticResource CardStyle}">
+            <Grid ColumnSpacing="16">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <Grid Width="32" Height="32" VerticalAlignment="Center">
+                    <ProgressRing x:Name="StatusRing" IsActive="True" Width="28" Height="28" />
+                    <FontIcon x:Name="StatusIcon" FontSize="26" Visibility="Collapsed" />
+                </Grid>
+                <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="2">
+                    <TextBlock x:Name="StatusTitle" Style="{StaticResource BodyStrongTextBlockStyle}" TextWrapping="Wrap" />
+                    <TextBlock x:Name="StatusText" Style="{StaticResource SecondaryTextStyle}" TextWrapping="Wrap" />
+                </StackPanel>
+                <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
+                    <Button x:Name="SecondaryAction" Visibility="Collapsed" Click="SecondaryAction_Click" />
+                    <Button x:Name="PrimaryAction" Visibility="Collapsed" Style="{StaticResource AccentButtonStyle}" Click="PrimaryAction_Click" />
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <!-- Restes trouvés -->
+        <Grid x:Name="ResultsPanel" Grid.Row="3" RowSpacing="10" Visibility="Collapsed">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <Grid ColumnSpacing="8">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <TextBlock x:Name="ResultsSummary" VerticalAlignment="Center" Style="{StaticResource BodyStrongTextBlockStyle}" />
+                <HyperlinkButton Grid.Column="1" Content="Cocher les éléments sûrs" Click="CheckCertain_Click" />
+                <HyperlinkButton Grid.Column="2" Content="Tout cocher" Click="CheckAll_Click" />
+                <HyperlinkButton Grid.Column="3" Content="Tout décocher" Click="CheckNone_Click" />
+            </Grid>
+            <ListView x:Name="LeftoverList" Grid.Row="1" SelectionMode="None">
+                <ListView.ItemContainerStyle>
+                    <Style TargetType="ListViewItem">
+                        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                        <Setter Property="Padding" Value="8,4" />
+                    </Style>
+                </ListView.ItemContainerStyle>
+                <ListView.ItemTemplate>
+                    <DataTemplate x:DataType="models:Leftover">
+                        <Grid ColumnSpacing="12">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <CheckBox IsChecked="{x:Bind IsChecked, Mode=TwoWay}" IsEnabled="{x:Bind CanDelete}" MinWidth="0"
+                                      AutomationProperties.Name="{x:Bind DisplayPath}" />
+                            <FontIcon Grid.Column="1" Glyph="{x:Bind Glyph}" FontSize="18" Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}" />
+                            <StackPanel Grid.Column="2" VerticalAlignment="Center">
+                                <TextBlock Text="{x:Bind DisplayPath}" TextTrimming="CharacterEllipsis" IsTextSelectionEnabled="True"
+                                           ToolTipService.ToolTip="{x:Bind DisplayPath}" />
+                                <TextBlock Text="{x:Bind Details}" Style="{StaticResource CaptionTextBlockStyle}"
+                                           Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                            </StackPanel>
+                            <Border Grid.Column="3" Padding="8,2" CornerRadius="8" VerticalAlignment="Center"
+                                    Background="{ThemeResource SubtleFillColorSecondaryBrush}">
+                                <TextBlock Text="{x:Bind ConfidenceText}" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                            </Border>
+                        </Grid>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </Grid>
+
+        <InfoBar x:Name="NoteBar" Grid.Row="4" IsOpen="False" IsClosable="False" />
+    </Grid>
+</Page>

@@ -1,0 +1,64 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Page
+    x:Class="NeoSoft.Views.SettingsPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <ScrollViewer>
+        <StackPanel Padding="36,24,36,36" Spacing="6">
+            <TextBlock Text="Paramètres" Style="{StaticResource TitleTextBlockStyle}" Margin="0,0,0,16" />
+
+            <TextBlock Text="Apparence" Style="{StaticResource BodyStrongTextBlockStyle}" Margin="0,0,0,4" />
+            <Border Style="{StaticResource CardStyle}" Padding="16">
+                <Grid ColumnSpacing="16">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <FontIcon Glyph="&#xE790;" />
+                    <TextBlock Grid.Column="1" Text="Thème" VerticalAlignment="Center" />
+                    <ComboBox x:Name="ThemeCombo" Grid.Column="2" MinWidth="160" SelectionChanged="ThemeCombo_SelectionChanged">
+                        <ComboBoxItem Content="Système" />
+                        <ComboBoxItem Content="Clair" />
+                        <ComboBoxItem Content="Sombre" />
+                    </ComboBox>
+                </Grid>
+            </Border>
+
+            <TextBlock Text="Mises à jour" Style="{StaticResource BodyStrongTextBlockStyle}" Margin="0,20,0,4" />
+            <Border Style="{StaticResource CardStyle}" Padding="16">
+                <Grid ColumnSpacing="16">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <FontIcon Glyph="&#xE895;" />
+                    <StackPanel Grid.Column="1">
+                        <TextBlock Text="Rechercher les mises à jour à l'ouverture" />
+                        <TextBlock Text="Pour les logiciels du catalogue installés sur ce PC" Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                    </StackPanel>
+                    <ToggleSwitch x:Name="CheckUpdatesToggle" Grid.Column="2" OnContent="" OffContent="" MinWidth="0" Toggled="CheckUpdatesToggle_Toggled" />
+                </Grid>
+            </Border>
+
+            <TextBlock Text="À propos" Style="{StaticResource BodyStrongTextBlockStyle}" Margin="0,20,0,4" />
+            <Border Style="{StaticResource CardStyle}" Padding="16">
+                <Grid ColumnSpacing="16">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <Image Source="ms-appx:///Assets/AppIcon.png" Width="40" Height="40" VerticalAlignment="Top" />
+                    <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="2">
+                        <TextBlock Text="NeoSoft" Style="{StaticResource BodyStrongTextBlockStyle}" />
+                        <TextBlock x:Name="VersionText" Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                        <TextBlock TextWrapping="Wrap" Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Margin="0,6,0,0"
+                                   Text="Les téléchargements passent par winget, le gestionnaire de paquets de Microsoft : chaque fichier vient du site de son éditeur et son empreinte est vérifiée avant l'installation." />
+                    </StackPanel>
+                </Grid>
+            </Border>
+        </StackPanel>
+    </ScrollViewer>
+</Page>

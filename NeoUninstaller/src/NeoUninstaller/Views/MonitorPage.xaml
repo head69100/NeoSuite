@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Page
+    x:Class="NeoUninstaller.Views.MonitorPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <Grid Padding="36,24,36,24" RowSpacing="16">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <StackPanel>
+            <TextBlock Text="Moniteur d'installation" Style="{StaticResource TitleTextBlockStyle}" />
+            <TextBlock Text="Photographiez le PC avant et après l'installation d'un logiciel : la différence liste tout ce que l'installation a créé. Ces éléments sont alors proposés automatiquement quand vous désinstallez ce logiciel."
+                       Style="{StaticResource SecondaryTextStyle}" TextWrapping="Wrap" />
+        </StackPanel>
+
+        <!-- Étape en cours -->
+        <Border x:Name="StateCard" Grid.Row="1" Style="{StaticResource CardStyle}" Padding="16">
+            <Grid ColumnSpacing="16">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <ProgressRing x:Name="StateRing" Width="28" Height="28" IsActive="False" VerticalAlignment="Center" />
+                <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="2">
+                    <TextBlock x:Name="StateTitle" Text="Aucun cliché en attente" Style="{StaticResource BodyStrongTextBlockStyle}" TextWrapping="Wrap" />
+                    <TextBlock x:Name="StateText" Text="Commencez par photographier le PC, installez le logiciel, puis revenez ici."
+                               Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="Wrap" />
+                </StackPanel>
+                <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
+                    <Button x:Name="CancelButton" Content="Annuler le cliché" Click="CancelButton_Click" Visibility="Collapsed" />
+                    <Button x:Name="SnapshotButton" Style="{StaticResource AccentButtonStyle}" Click="SnapshotButton_Click">
+                        <StackPanel Orientation="Horizontal" Spacing="8">
+                            <FontIcon Glyph="&#xE722;" FontSize="14" />
+                            <TextBlock x:Name="SnapshotLabel" Text="Photographier avant" />
+                        </StackPanel>
+                    </Button>
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <InfoBar x:Name="ResultBar" Grid.Row="2" IsOpen="False" />
+
+        <TextBlock x:Name="RecordsTitle" Grid.Row="3" Text="Installations surveillées" Style="{StaticResource BodyStrongTextBlockStyle}" />
+
+        <StackPanel x:Name="EmptyPanel" Grid.Row="4" HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="8" Visibility="Collapsed">
+            <FontIcon Glyph="&#xE9D9;" FontSize="44" Foreground="{ThemeResource TextFillColorTertiaryBrush}" />
+            <TextBlock Text="Aucune installation surveillée pour le moment" HorizontalAlignment="Center" Style="{StaticResource BodyStrongTextBlockStyle}" />
+        </StackPanel>
+
+        <ScrollViewer Grid.Row="4">
+            <StackPanel x:Name="RecordsPanel" Spacing="8" />
+        </ScrollViewer>
+    </Grid>
+</Page>

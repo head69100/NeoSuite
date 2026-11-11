@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Page
+    x:Class="NeoBoost.Views.HistoryPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <Grid Padding="36,24,36,24" RowSpacing="14">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <StackPanel>
+            <TextBlock Text="Historique de consommation" Style="{StaticResource TitleTextBlockStyle}" />
+            <TextBlock Text="Processeur et mémoire des 30 dernières minutes, pendant que NeoBoost est ouvert. Un pic explique un ralenti : regardez à quelle heure il s'est produit."
+                       Style="{StaticResource SecondaryTextStyle}" TextWrapping="Wrap" />
+        </StackPanel>
+
+        <Grid Grid.Row="1" ColumnSpacing="12">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Border Style="{StaticResource CardStyle}" Padding="14,10">
+                <StackPanel>
+                    <TextBlock Text="Pic processeur" Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                    <TextBlock x:Name="PeakCpuText" Style="{StaticResource BodyStrongTextBlockStyle}" />
+                </StackPanel>
+            </Border>
+            <Border Grid.Column="1" Style="{StaticResource CardStyle}" Padding="14,10">
+                <StackPanel>
+                    <TextBlock Text="Pic mémoire" Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                    <TextBlock x:Name="PeakRamText" Style="{StaticResource BodyStrongTextBlockStyle}" />
+                </StackPanel>
+            </Border>
+            <Border Grid.Column="2" Style="{StaticResource CardStyle}" Padding="14,10">
+                <StackPanel>
+                    <TextBlock Text="Maintenant" Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                    <TextBlock x:Name="CurrentText" Style="{StaticResource BodyStrongTextBlockStyle}" />
+                </StackPanel>
+            </Border>
+        </Grid>
+
+        <Border Grid.Row="2" Style="{StaticResource CardStyle}" Padding="16,12">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Canvas x:Name="ChartCanvas" />
+                <StackPanel Grid.Row="1" Orientation="Horizontal" Spacing="16" HorizontalAlignment="Center">
+                    <StackPanel Orientation="Horizontal" Spacing="6">
+                        <Ellipse Width="10" Height="10" Fill="{ThemeResource AccentFillColorDefaultBrush}" VerticalAlignment="Center" />
+                        <TextBlock Text="Processeur" Style="{StaticResource CaptionTextBlockStyle}" />
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Spacing="6">
+                        <Ellipse Width="10" Height="10" Fill="{ThemeResource SystemFillColorCautionBrush}" VerticalAlignment="Center" />
+                        <TextBlock Text="Mémoire" Style="{StaticResource CaptionTextBlockStyle}" />
+                    </StackPanel>
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <TextBlock x:Name="EmptyText" Grid.Row="3" Style="{StaticResource SecondaryTextStyle}" TextAlignment="Center"
+                   Text="L'historique se remplit dès maintenant (un point toutes les 5 secondes). Laissez NeoBoost ouvert en arrière-plan pour construire la courbe."
+                   Visibility="Visible" />
+    </Grid>
+</Page>

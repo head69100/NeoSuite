@@ -1,0 +1,133 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Page
+    x:Class="NeoDriver.Views.UpdatesPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:models="using:NeoDriver.Models">
+
+    <Grid Padding="36,24,36,24" RowSpacing="16">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <Grid ColumnSpacing="8">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <StackPanel>
+                <TextBlock Text="Mises à jour" Style="{StaticResource TitleTextBlockStyle}" />
+                <TextBlock x:Name="SummaryText" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+            </StackPanel>
+            <Button x:Name="HiddenButton" Grid.Column="1" VerticalAlignment="Center" Click="HiddenButton_Click" Content="Masqués"
+                    ToolTipService.ToolTip="Pilotes que vous avez choisi de ne plus voir proposés" />
+            <Button x:Name="SearchButton" Grid.Column="2" VerticalAlignment="Center" Click="SearchButton_Click"
+                    AutomationProperties.Name="Rechercher">
+                <StackPanel Orientation="Horizontal" Spacing="8">
+                    <FontIcon Glyph="&#xE72C;" FontSize="14" />
+                    <TextBlock Text="Rechercher" />
+                </StackPanel>
+            </Button>
+            <Button x:Name="UpdateAllButton" Grid.Column="3" VerticalAlignment="Center" Style="{StaticResource AccentButtonStyle}"
+                    IsEnabled="False" Click="UpdateAllButton_Click" AutomationProperties.Name="Tout mettre à jour">
+                <StackPanel Orientation="Horizontal" Spacing="8">
+                    <FontIcon x:Name="UpdateAllIcon" Glyph="&#xE896;" FontSize="14" />
+                    <TextBlock Text="Tout mettre à jour" />
+                </StackPanel>
+            </Button>
+        </Grid>
+
+        <StackPanel Grid.Row="1" Spacing="8">
+            <InfoBar x:Name="ErrorBar" Severity="Error" Title="Recherche impossible" IsOpen="False" />
+
+            <!-- Progression de l'installation -->
+            <InfoBar x:Name="ProgressBarInfo" Severity="Informational" IsOpen="False" IsClosable="False" Title="Installation en cours">
+                <InfoBar.Content>
+                    <ProgressBar IsIndeterminate="True" Margin="0,0,0,12" />
+                </InfoBar.Content>
+            </InfoBar>
+
+            <!-- Résultat de l'installation -->
+            <InfoBar x:Name="ResultBar" IsOpen="False">
+                <InfoBar.ActionButton>
+                    <Button x:Name="RestartButton" Content="Redémarrer maintenant" Visibility="Collapsed" Click="RestartButton_Click" />
+                </InfoBar.ActionButton>
+            </InfoBar>
+
+            <InfoBar x:Name="AdminBar" Severity="Informational" IsOpen="False" IsClosable="True"
+                     Title="Droits administrateur"
+                     Message="L'installation de pilotes nécessite les droits administrateur. NeoDriver vous proposera de redémarrer en mode administrateur." />
+        </StackPanel>
+
+        <!-- Recherche en cours -->
+        <StackPanel x:Name="LoadingPanel" Grid.Row="2" HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="12" Visibility="Collapsed">
+            <ProgressRing IsActive="True" Width="48" Height="48" />
+            <TextBlock Text="Recherche sur Windows Update…" HorizontalAlignment="Center" Style="{StaticResource BodyStrongTextBlockStyle}" />
+            <TextBlock Text="Cela peut prendre jusqu'à une minute." HorizontalAlignment="Center" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+        </StackPanel>
+
+        <!-- Tout est à jour -->
+        <StackPanel x:Name="UpToDatePanel" Grid.Row="2" HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="8" Visibility="Collapsed">
+            <FontIcon Glyph="&#xE930;" FontSize="48" Foreground="{ThemeResource SystemFillColorSuccessBrush}" />
+            <TextBlock Text="Tous vos pilotes sont à jour" HorizontalAlignment="Center" Style="{StaticResource SubtitleTextBlockStyle}" />
+            <TextBlock Text="Windows Update ne propose aucune mise à jour de pilote pour ce PC." HorizontalAlignment="Center" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+        </StackPanel>
+
+        <ListView x:Name="DriverList" Grid.Row="2" SelectionMode="None" Padding="0">
+            <ListView.ItemContainerStyle>
+                <Style TargetType="ListViewItem">
+                    <Setter Property="Padding" Value="0" />
+                    <Setter Property="Margin" Value="0,0,0,6" />
+                    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                </Style>
+            </ListView.ItemContainerStyle>
+            <ListView.ItemTemplate>
+                <DataTemplate x:DataType="models:DriverItem">
+                    <Border Style="{StaticResource CardStyle}" Padding="16,12">
+                        <Grid ColumnSpacing="16">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" MinWidth="130" />
+                            </Grid.ColumnDefinitions>
+                            <Border Width="40" Height="40" CornerRadius="6"
+                                    Background="{ThemeResource SubtleFillColorSecondaryBrush}">
+                                <FontIcon Glyph="{x:Bind Glyph}" FontSize="20" Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}" />
+                            </Border>
+                            <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                <TextBlock Text="{x:Bind DeviceName}" Style="{StaticResource BodyStrongTextBlockStyle}" TextTrimming="CharacterEllipsis" />
+                                <TextBlock Text="{x:Bind Subtitle}" Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                            </StackPanel>
+                            <StackPanel Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Right">
+                                <TextBlock Text="{x:Bind CurrentText}" HorizontalAlignment="Right" Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                                <TextBlock Text="{x:Bind NewText}" HorizontalAlignment="Right" />
+                            </StackPanel>
+                            <Grid Grid.Column="3" VerticalAlignment="Center" HorizontalAlignment="Right">
+                                <StackPanel Spacing="4" Visibility="{x:Bind ShowButton, Mode=OneWay}">
+                                    <Button Content="Mettre à jour" HorizontalAlignment="Right" Click="UpdateOneButton_Click" />
+                                    <HyperlinkButton Content="Ne plus proposer" HorizontalAlignment="Right" Padding="0" FontSize="12" Click="HideOneButton_Click" />
+                                    <TextBlock Text="{x:Bind StateText, Mode=OneWay}" Visibility="{x:Bind IsFailed, Mode=OneWay}"
+                                               Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource SystemFillColorCriticalBrush}"
+                                               HorizontalAlignment="Right" TextWrapping="Wrap" MaxWidth="220" TextAlignment="Right" />
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal" Spacing="8" Visibility="{x:Bind IsBusy, Mode=OneWay}">
+                                    <ProgressRing IsActive="{x:Bind IsBusy, Mode=OneWay}" Width="16" Height="16" />
+                                    <TextBlock Text="{x:Bind StateText, Mode=OneWay}" VerticalAlignment="Center" />
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal" Spacing="6" Visibility="{x:Bind IsInstalled, Mode=OneWay}">
+                                    <FontIcon Glyph="&#xE930;" FontSize="16" Foreground="{ThemeResource SystemFillColorSuccessBrush}" />
+                                    <TextBlock Text="Installé" VerticalAlignment="Center" />
+                                </StackPanel>
+                            </Grid>
+                        </Grid>
+                    </Border>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+    </Grid>
+</Page>
