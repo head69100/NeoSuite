@@ -56,8 +56,22 @@ if ($info.suiteVersion -ne $version) {
     throw "dist\NeoSuite.exe contient NeoSuite $($info.suiteVersion), le code est en $version : relancez tools\build-setup.ps1 -SkipPackages"
 }
 
+# Compatibilité : NeoSuite 0.5.0 ne propose une release que si elle contient aussi « NeoSuite.pak » (ancien
+# installateur en deux fichiers). On joint donc un petit NeoSuite.pak (info.json seul) : 0.5.0 le télécharge avec
+# NeoSuite.exe, et l'installateur l'ignore car il lit d'abord les fichiers collés à sa propre fin.
+$compatPak = Join-Path $env:TEMP 'NeoSuite.pak'
+if (Test-Path $compatPak) { Remove-Item $compatPak -Force }
+$pakZip = [System.IO.Compression.ZipFile]::Open($compatPak, 'Create')
+try {
+    $entry = $pakZip.CreateEntry('info.json')
+    $writer = New-Object System.IO.StreamWriter($entry.Open(), (New-Object System.Text.UTF8Encoding $false))
+    $writer.Write(($info | ConvertTo-Json -Compress))
+    $writer.Dispose()
+}
+finally { $pakZip.Dispose() }
+
 $apps = (Get-Content $catalog -Raw -Encoding UTF8 | ConvertFrom-Json).PSObject.Properties
-$assets = @($exe, $catalog) + ($apps | ForEach-Object { Join-Path $root "packages\$($_.Name).zip" })
+$assets = @($exe, $catalog, $compatPak) + ($apps | ForEach-Object { Join-Path $root "packages\$($_.Name).zip" })
 foreach ($a in $assets) { if (-not (Test-Path $a)) { throw "Paquet manquant : $a" } }
 $totalMb = [math]::Round((Get-Item $exe).Length / 1MB)
 
@@ -106,7 +120,7 @@ $(($lines -join "`n").Trim())
 2. Lancez-le et acceptez la confirmation de Windows.
 3. Ouvrez le panneau avec **Ctrl + Alt + N**, puis cliquez sur les applications à installer : elles se téléchargent depuis cette page, dans leur dernière version.
 
-Déjà installé ? NeoSuite propose cette version tout seul, en haut de son panneau. Les autres fichiers ci-dessous (`.zip`, `catalog.json`) sont les applications, utilisées automatiquement par NeoSuite et NeoSoft.
+Déjà installé ? NeoSuite propose cette version tout seul, en haut de son panneau. Les autres fichiers ci-dessous (`.zip`, `catalog.json`) sont les applications, utilisées automatiquement par NeoSuite et NeoSoft ; `NeoSuite.pak` (quelques Ko) ne sert qu'aux mises à jour depuis NeoSuite 0.5.0 : inutile de le télécharger.
 
 ### Versions des applications
 | Appli | Version |
