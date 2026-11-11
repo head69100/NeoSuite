@@ -18,7 +18,9 @@
 #>
 param([switch]$Draft)
 
-$ErrorActionPreference = 'Stop'
+# Pas 'Stop' : PowerShell 5.1 prendrait pour une erreur fatale tout ce que gh et git écrivent sur stderr
+# (« release not found », progression de git push…). Les échecs sont détectés par $LASTEXITCODE et throw.
+$ErrorActionPreference = 'Continue'
 $root = Split-Path $PSScriptRoot -Parent
 $repo = 'head69100/NeoSuite'
 $utf8 = New-Object System.Text.UTF8Encoding $true
